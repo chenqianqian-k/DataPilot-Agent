@@ -32,7 +32,13 @@ DataPilot 是一个基于 **DeepSeek、LangGraph、Pandas、FastAPI 和 Streamli
 
 ## 系统架构
 
-![DataPilot System Architecture](assets/framework.png)
+<p align="center">
+  <img
+    src="https://github.com/chenqianqian-k/DataPilot-Agent/blob/main/assets/framework.png?raw=true"
+    alt="DataPilot System Architecture"
+    width="100%"
+  />
+</p>
 
 DataPilot 由以下核心部分组成：
 
@@ -48,7 +54,13 @@ DataPilot 由以下核心部分组成：
 
 ## Agent 工作流
 
-![DataPilot Autonomous Analysis Workflow](assets/workflow.png)
+<p align="center">
+  <img
+    src="https://github.com/chenqianqian-k/DataPilot-Agent/blob/main/assets/workflow.png?raw=true"
+    alt="DataPilot Autonomous Analysis Workflow"
+    width="100%"
+  />
+</p>
 
 DataPilot 使用 LangGraph 将数据分析过程组织为一个带状态、条件分支和循环修复能力的工作流。
 
