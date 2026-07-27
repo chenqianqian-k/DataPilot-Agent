@@ -437,8 +437,6 @@ DataPilot-Agent/
 - Linux
 - DeepSeek API Key
 
-项目的数据处理部分可以直接在 CPU 环境运行，不需要 GPU。
-
 ---
 
 ## 安装方法
@@ -713,39 +711,6 @@ Agent 会先理解数据结构和用户需求，再生成结构化分析计划�
 
 使用 FastAPI 提供后端接口，Streamlit 提供交互式前端，便于继续扩展其他客户端。
 
----
-
-## 数据安全
-
-以下内容不会提交到 GitHub：
-
-- `.env` 中的真实 API Key
-- 用户上传的 CSV 或 Excel 文件
-- SQLite 任务数据库
-- Agent 生成的图表和临时文件
-- Python 缓存文件
-- 服务运行日志
-
-上传代码前仍建议检查：
-
-```bash
-git status
-```
-
-并确认以下文件未被提交：
-
-```text
-.env
-*.db
-*.sqlite
-data/uploads/*
-data/database/*
-data/artifacts/*
-data/outputs/*
-```
-
----
-
 ## 安全说明
 
 DataPilot 会执行大模型生成的 Python 代码。
@@ -799,14 +764,6 @@ DataPilot 会执行大模型生成的 Python 代码。
 - [ ] 增加自动化测试与 Agent 评估
 - [ ] 增加 Docker 部署支持
 - [ ] 增加多用户身份与任务隔离
-
----
-
-## 简历项目描述
-
-**DataPilot：具备自主规划、代码执行与错误修复能力的智能数据分析 Agent**
-
-基于 DeepSeek、LangGraph、Pandas、FastAPI 和 Streamlit 构建可执行智能数据分析 Agent，支持 CSV/Excel 数据上传与自动画像，并根据自然语言问题自主完成分析规划、Python 代码生成、代码执行、结果解释和图表生成。基于 LangGraph 构建条件路由与自动修复工作流，在代码执行失败时结合异常信息进行诊断、修复和重试；使用 SQLite 持久化分析任务，支持历史结果恢复、删除及 Markdown 报告导出。
 
 ---
 
