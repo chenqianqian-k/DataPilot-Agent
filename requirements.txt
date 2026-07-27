@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+streamlit
+pandas
+numpy
+openpyxl
+python-multipart
+pydantic
+pydantic-settings
+python-dotenv
+plotly
+httpx
+requests
+openai
+langgraph
