@@ -38,7 +38,7 @@ DataPilot 是一个基于 **DeepSeek、LangGraph、Pandas、FastAPI 和 Streamli
 
 <p align="center">
   <img
-    src="assets/framework.png"
+    src="assetes/framework.png"
     alt="DataPilot System Architecture"
     width="1000"
   />
@@ -61,7 +61,7 @@ DataPilot 由以下核心部分组成：
 
 <p align="center">
   <img
-    src="assets/workflow.png"
+    src="assetes/workflow.png"
     alt="DataPilot Autonomous Analysis Workflow"
     width="100%"
   />
