@@ -68,7 +68,10 @@ class AnalysisStep(BaseModel):
 
     required_columns: list[str] = Field(
         default_factory=list,
-        description="该步骤需要使用的字段",
+        description=(
+            "该步骤需要读取的数据集原始字段，"
+            "不包含计算后产生的输出字段"
+        ),
     )
 
 
@@ -84,7 +87,10 @@ class AnalysisPlan(BaseModel):
 
     required_columns: list[str] = Field(
         default_factory=list,
-        description="整个任务需要使用的字段",
+        description=(
+            "整个任务需要读取的数据集原始字段，"
+            "不包含聚合、计算或重命名后的输出字段"
+        ),
     )
 
     steps: list[AnalysisStep] = Field(
