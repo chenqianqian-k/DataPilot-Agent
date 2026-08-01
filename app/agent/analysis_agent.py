@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 from uuid import uuid4
 
 from app.agent.graph import analysis_graph
@@ -25,9 +26,16 @@ class DataAnalysisAgent:
     def __init__(
         self,
         max_repair_attempts: int = 2,
+        workflow: Any | None = None,
     ) -> None:
         """
         初始化DataPilot Agent。
+
+        workflow：
+        允许为Agent指定不同的LangGraph工作流。
+
+        正常使用时不传，默认使用正式分析工作流；
+        故障评估时传入带有故障注入节点的工作流。
         """
 
         if max_repair_attempts < 0:
@@ -39,11 +47,20 @@ class DataAnalysisAgent:
             max_repair_attempts
         )
 
+        self.workflow = (
+            workflow
+            if workflow is not None
+            else analysis_graph
+        )
+
     def analyze(
         self,
         file_path: str | Path,
         question: str,
         dataset_id: str | None = None,
+        fault_injection: (
+            dict[str, Any] | None
+        ) = None,
     ) -> AnalysisResponse:
         """
         使用文件路径执行完整的数据分析任务。
@@ -86,14 +103,22 @@ class DataAnalysisAgent:
             "max_repair_attempts": (
                 self.max_repair_attempts
             ),
+            "fault_injected": False,
             "execution_trace": [
                 "LangGraph分析任务已创建"
             ],
         }
 
+        if fault_injection is not None:
+            initial_state[
+                "fault_injection"
+            ] = fault_injection
+
         try:
-            final_state = analysis_graph.invoke(
-                initial_state
+            final_state = (
+                self.workflow.invoke(
+                    initial_state
+                )
             )
 
         except Exception as exc:
