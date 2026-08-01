@@ -1,0 +1,410 @@
+{
+  "benchmark_name": "DataPilot Fault Injection Evaluation",
+  "version": "1.0",
+  "description": "通过确定性故障注入评估DataPilot的代码诊断与自动修复能力",
+  "total_cases": 8,
+  "fault_cases": [
+    {
+      "case_id": "sales_001",
+      "dataset_file": "sales.csv",
+      "category": "group_aggregation",
+      "question": "统计不同地区的销售总额，按照销售总额从高到低排序，并生成柱状图。结果包含region和total_sales两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "region": "华东",
+            "total_sales": 1616134.03
+          },
+          {
+            "region": "华南",
+            "total_sales": 1368110.0
+          },
+          {
+            "region": "华北",
+            "total_sales": 1150962.19
+          },
+          {
+            "region": "西南",
+            "total_sales": 878801.76
+          }
+        ],
+        "key_columns": [
+          "region"
+        ],
+        "value_columns": [
+          "total_sales"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": true,
+      "fault_case_id": "fault_sales_001",
+      "base_case_id": "sales_001",
+      "fault_injection": {
+        "fault_type": "column_typo",
+        "target_text": "sales_amount",
+        "replacement_text": "sales_amout"
+      },
+      "expected_error_type": "KeyError"
+    },
+    {
+      "case_id": "sales_002",
+      "dataset_file": "sales.csv",
+      "category": "time_series",
+      "question": "统计每个月的销售总额，按照月份升序排列，并生成折线图。结果包含month和total_sales两列，month格式为YYYY-MM。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "month": "2025-01",
+            "total_sales": 436048.04
+          },
+          {
+            "month": "2025-02",
+            "total_sales": 380949.31
+          },
+          {
+            "month": "2025-03",
+            "total_sales": 454588.29
+          },
+          {
+            "month": "2025-04",
+            "total_sales": 515581.64
+          },
+          {
+            "month": "2025-05",
+            "total_sales": 374604.6
+          },
+          {
+            "month": "2025-06",
+            "total_sales": 467374.06
+          },
+          {
+            "month": "2025-07",
+            "total_sales": 405218.72
+          },
+          {
+            "month": "2025-08",
+            "total_sales": 349690.79
+          },
+          {
+            "month": "2025-09",
+            "total_sales": 415054.97
+          },
+          {
+            "month": "2025-10",
+            "total_sales": 442826.27
+          },
+          {
+            "month": "2025-11",
+            "total_sales": 381520.89
+          },
+          {
+            "month": "2025-12",
+            "total_sales": 390550.4
+          }
+        ],
+        "key_columns": [
+          "month"
+        ],
+        "value_columns": [
+          "total_sales"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": true,
+      "fault_case_id": "fault_sales_002",
+      "base_case_id": "sales_002",
+      "fault_injection": {
+        "fault_type": "type_error"
+      },
+      "expected_error_type": "TypeError"
+    },
+    {
+      "case_id": "sales_004",
+      "dataset_file": "sales.csv",
+      "category": "top_n",
+      "question": "找出销售总额最高的前3名销售人员，按照销售总额从高到低排序，并生成柱状图。结果包含salesperson和total_sales两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "salesperson": "赵敏",
+            "total_sales": 1011514.52
+          },
+          {
+            "salesperson": "王强",
+            "total_sales": 858616.46
+          },
+          {
+            "salesperson": "李娜",
+            "total_sales": 844129.87
+          }
+        ],
+        "key_columns": [
+          "salesperson"
+        ],
+        "value_columns": [
+          "total_sales"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": true,
+      "fault_case_id": "fault_sales_004",
+      "base_case_id": "sales_004",
+      "fault_injection": {
+        "fault_type": "undefined_variable"
+      },
+      "expected_error_type": "NameError"
+    },
+    {
+      "case_id": "employees_001",
+      "dataset_file": "employees.xlsx",
+      "category": "count",
+      "question": "统计每个部门的员工人数，按照人数从高到低排序，并生成柱状图。结果包含department和employee_count两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "department": "研发部",
+            "employee_count": 24
+          },
+          {
+            "department": "销售部",
+            "employee_count": 18
+          },
+          {
+            "department": "市场部",
+            "employee_count": 12
+          },
+          {
+            "department": "人力资源部",
+            "employee_count": 8
+          },
+          {
+            "department": "财务部",
+            "employee_count": 8
+          }
+        ],
+        "key_columns": [
+          "department"
+        ],
+        "value_columns": [
+          "employee_count"
+        ],
+        "tolerance": 0
+      },
+      "chart_required": true,
+      "fault_case_id": "fault_employees_001",
+      "base_case_id": "employees_001",
+      "fault_injection": {
+        "fault_type": "missing_column"
+      },
+      "expected_error_type": "KeyError"
+    },
+    {
+      "case_id": "employees_002",
+      "dataset_file": "employees.xlsx",
+      "category": "average",
+      "question": "计算每个部门的平均月薪，按照平均月薪从高到低排序。结果包含department和average_salary两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "department": "研发部",
+            "average_salary": 23461.14
+          },
+          {
+            "department": "销售部",
+            "average_salary": 19346.89
+          },
+          {
+            "department": "财务部",
+            "average_salary": 18931.65
+          },
+          {
+            "department": "人力资源部",
+            "average_salary": 18178.93
+          },
+          {
+            "department": "市场部",
+            "average_salary": 17557.1
+          }
+        ],
+        "key_columns": [
+          "department"
+        ],
+        "value_columns": [
+          "average_salary"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": false,
+      "fault_case_id": "fault_employees_002",
+      "base_case_id": "employees_002",
+      "fault_injection": {
+        "fault_type": "column_typo",
+        "target_text": "monthly_salary",
+        "replacement_text": "montly_salary"
+      },
+      "expected_error_type": "KeyError"
+    },
+    {
+      "case_id": "orders_001",
+      "dataset_file": "orders.csv",
+      "category": "distribution",
+      "question": "统计不同订单状态的订单数量，按照数量从高到低排序，并生成柱状图。结果包含order_status和order_count两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "order_status": "已完成",
+            "order_count": 148
+          },
+          {
+            "order_status": "已取消",
+            "order_count": 20
+          },
+          {
+            "order_status": "已退款",
+            "order_count": 12
+          }
+        ],
+        "key_columns": [
+          "order_status"
+        ],
+        "value_columns": [
+          "order_count"
+        ],
+        "tolerance": 0
+      },
+      "chart_required": true,
+      "fault_case_id": "fault_orders_001",
+      "base_case_id": "orders_001",
+      "fault_injection": {
+        "fault_type": "undefined_variable"
+      },
+      "expected_error_type": "NameError"
+    },
+    {
+      "case_id": "orders_002",
+      "dataset_file": "orders.csv",
+      "category": "filter_aggregation",
+      "question": "仅分析已完成订单，统计各产品类别的订单总金额，按照总金额从高到低排序。结果包含category和total_revenue两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "category": "食品",
+            "total_revenue": 119829.64
+          },
+          {
+            "category": "服装",
+            "total_revenue": 99317.46
+          },
+          {
+            "category": "数码",
+            "total_revenue": 70884.18
+          },
+          {
+            "category": "家居",
+            "total_revenue": 66577.98
+          },
+          {
+            "category": "图书",
+            "total_revenue": 64948.98
+          }
+        ],
+        "key_columns": [
+          "category"
+        ],
+        "value_columns": [
+          "total_revenue"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": false,
+      "fault_case_id": "fault_orders_002",
+      "base_case_id": "orders_002",
+      "fault_injection": {
+        "fault_type": "column_typo",
+        "target_text": "order_amount",
+        "replacement_text": "order_amout"
+      },
+      "expected_error_type": "KeyError"
+    },
+    {
+      "case_id": "orders_005",
+      "dataset_file": "orders.csv",
+      "category": "time_series",
+      "question": "仅分析已完成订单，统计每个月的订单数量，按照月份升序排列，并生成折线图。结果包含month和order_count两列，month格式为YYYY-MM。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "month": "2025-01",
+            "order_count": 18
+          },
+          {
+            "month": "2025-02",
+            "order_count": 10
+          },
+          {
+            "month": "2025-03",
+            "order_count": 12
+          },
+          {
+            "month": "2025-04",
+            "order_count": 17
+          },
+          {
+            "month": "2025-05",
+            "order_count": 14
+          },
+          {
+            "month": "2025-06",
+            "order_count": 16
+          },
+          {
+            "month": "2025-07",
+            "order_count": 11
+          },
+          {
+            "month": "2025-08",
+            "order_count": 10
+          },
+          {
+            "month": "2025-09",
+            "order_count": 11
+          },
+          {
+            "month": "2025-10",
+            "order_count": 12
+          },
+          {
+            "month": "2025-11",
+            "order_count": 9
+          },
+          {
+            "month": "2025-12",
+            "order_count": 8
+          }
+        ],
+        "key_columns": [
+          "month"
+        ],
+        "value_columns": [
+          "order_count"
+        ],
+        "tolerance": 0
+      },
+      "chart_required": true,
+      "fault_case_id": "fault_orders_005",
+      "base_case_id": "orders_005",
+      "fault_injection": {
+        "fault_type": "missing_column"
+      },
+      "expected_error_type": "KeyError"
+    }
+  ]
+}

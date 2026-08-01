@@ -1,0 +1,597 @@
+{
+  "benchmark_name": "DataPilot Basic Evaluation",
+  "version": "1.0",
+  "description": "用于评估DataPilot数据分析Agent的基础分析、代码执行和图表生成能力。",
+  "total_cases": 15,
+  "cases": [
+    {
+      "case_id": "sales_001",
+      "dataset_file": "sales.csv",
+      "category": "group_aggregation",
+      "question": "统计不同地区的销售总额，按照销售总额从高到低排序，并生成柱状图。结果包含region和total_sales两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "region": "华东",
+            "total_sales": 1616134.03
+          },
+          {
+            "region": "华南",
+            "total_sales": 1368110.0
+          },
+          {
+            "region": "华北",
+            "total_sales": 1150962.19
+          },
+          {
+            "region": "西南",
+            "total_sales": 878801.76
+          }
+        ],
+        "key_columns": [
+          "region"
+        ],
+        "value_columns": [
+          "total_sales"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": true
+    },
+    {
+      "case_id": "sales_002",
+      "dataset_file": "sales.csv",
+      "category": "time_series",
+      "question": "统计每个月的销售总额，按照月份升序排列，并生成折线图。结果包含month和total_sales两列，month格式为YYYY-MM。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "month": "2025-01",
+            "total_sales": 436048.04
+          },
+          {
+            "month": "2025-02",
+            "total_sales": 380949.31
+          },
+          {
+            "month": "2025-03",
+            "total_sales": 454588.29
+          },
+          {
+            "month": "2025-04",
+            "total_sales": 515581.64
+          },
+          {
+            "month": "2025-05",
+            "total_sales": 374604.6
+          },
+          {
+            "month": "2025-06",
+            "total_sales": 467374.06
+          },
+          {
+            "month": "2025-07",
+            "total_sales": 405218.72
+          },
+          {
+            "month": "2025-08",
+            "total_sales": 349690.79
+          },
+          {
+            "month": "2025-09",
+            "total_sales": 415054.97
+          },
+          {
+            "month": "2025-10",
+            "total_sales": 442826.27
+          },
+          {
+            "month": "2025-11",
+            "total_sales": 381520.89
+          },
+          {
+            "month": "2025-12",
+            "total_sales": 390550.4
+          }
+        ],
+        "key_columns": [
+          "month"
+        ],
+        "value_columns": [
+          "total_sales"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": true
+    },
+    {
+      "case_id": "sales_003",
+      "dataset_file": "sales.csv",
+      "category": "ranking",
+      "question": "统计不同产品类别的利润总额，按照利润从高到低排序。结果包含category和total_profit两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "category": "电子产品",
+            "total_profit": 414343.1
+          },
+          {
+            "category": "家具",
+            "total_profit": 306244.26
+          },
+          {
+            "category": "办公用品",
+            "total_profit": 187694.53
+          }
+        ],
+        "key_columns": [
+          "category"
+        ],
+        "value_columns": [
+          "total_profit"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": false
+    },
+    {
+      "case_id": "sales_004",
+      "dataset_file": "sales.csv",
+      "category": "top_n",
+      "question": "找出销售总额最高的前3名销售人员，按照销售总额从高到低排序，并生成柱状图。结果包含salesperson和total_sales两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "salesperson": "赵敏",
+            "total_sales": 1011514.52
+          },
+          {
+            "salesperson": "王强",
+            "total_sales": 858616.46
+          },
+          {
+            "salesperson": "李娜",
+            "total_sales": 844129.87
+          }
+        ],
+        "key_columns": [
+          "salesperson"
+        ],
+        "value_columns": [
+          "total_sales"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": true
+    },
+    {
+      "case_id": "sales_005",
+      "dataset_file": "sales.csv",
+      "category": "average",
+      "question": "计算不同地区的平均单笔销售额，按照平均销售额从高到低排序。结果包含region和average_sales两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "region": "华东",
+            "average_sales": 14964.2
+          },
+          {
+            "region": "华南",
+            "average_sales": 12667.69
+          },
+          {
+            "region": "华北",
+            "average_sales": 10657.06
+          },
+          {
+            "region": "西南",
+            "average_sales": 8137.05
+          }
+        ],
+        "key_columns": [
+          "region"
+        ],
+        "value_columns": [
+          "average_sales"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": false
+    },
+    {
+      "case_id": "employees_001",
+      "dataset_file": "employees.xlsx",
+      "category": "count",
+      "question": "统计每个部门的员工人数，按照人数从高到低排序，并生成柱状图。结果包含department和employee_count两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "department": "研发部",
+            "employee_count": 24
+          },
+          {
+            "department": "销售部",
+            "employee_count": 18
+          },
+          {
+            "department": "市场部",
+            "employee_count": 12
+          },
+          {
+            "department": "人力资源部",
+            "employee_count": 8
+          },
+          {
+            "department": "财务部",
+            "employee_count": 8
+          }
+        ],
+        "key_columns": [
+          "department"
+        ],
+        "value_columns": [
+          "employee_count"
+        ],
+        "tolerance": 0
+      },
+      "chart_required": true
+    },
+    {
+      "case_id": "employees_002",
+      "dataset_file": "employees.xlsx",
+      "category": "average",
+      "question": "计算每个部门的平均月薪，按照平均月薪从高到低排序。结果包含department和average_salary两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "department": "研发部",
+            "average_salary": 23461.14
+          },
+          {
+            "department": "销售部",
+            "average_salary": 19346.89
+          },
+          {
+            "department": "财务部",
+            "average_salary": 18931.65
+          },
+          {
+            "department": "人力资源部",
+            "average_salary": 18178.93
+          },
+          {
+            "department": "市场部",
+            "average_salary": 17557.1
+          }
+        ],
+        "key_columns": [
+          "department"
+        ],
+        "value_columns": [
+          "average_salary"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": false
+    },
+    {
+      "case_id": "employees_003",
+      "dataset_file": "employees.xlsx",
+      "category": "group_comparison",
+      "question": "比较不同学历员工的平均月薪，按照平均月薪从高到低排序，并生成柱状图。结果包含education和average_salary两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "education": "博士",
+            "average_salary": 24890.95
+          },
+          {
+            "education": "硕士",
+            "average_salary": 22427.27
+          },
+          {
+            "education": "本科",
+            "average_salary": 18571.23
+          }
+        ],
+        "key_columns": [
+          "education"
+        ],
+        "value_columns": [
+          "average_salary"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": true
+    },
+    {
+      "case_id": "employees_004",
+      "dataset_file": "employees.xlsx",
+      "category": "performance",
+      "question": "计算各部门的平均绩效分数，按照平均绩效从高到低排序。结果包含department和average_performance两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "department": "市场部",
+            "average_performance": 85.23
+          },
+          {
+            "department": "销售部",
+            "average_performance": 84.32
+          },
+          {
+            "department": "财务部",
+            "average_performance": 83.32
+          },
+          {
+            "department": "人力资源部",
+            "average_performance": 80.64
+          },
+          {
+            "department": "研发部",
+            "average_performance": 80.36
+          }
+        ],
+        "key_columns": [
+          "department"
+        ],
+        "value_columns": [
+          "average_performance"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": false
+    },
+    {
+      "case_id": "employees_005",
+      "dataset_file": "employees.xlsx",
+      "category": "distribution",
+      "question": "统计不同城市的员工人数，按照人数从高到低排序，并生成柱状图。结果包含city和employee_count两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "city": "上海",
+            "employee_count": 24
+          },
+          {
+            "city": "深圳",
+            "employee_count": 22
+          },
+          {
+            "city": "杭州",
+            "employee_count": 14
+          },
+          {
+            "city": "北京",
+            "employee_count": 10
+          }
+        ],
+        "key_columns": [
+          "city"
+        ],
+        "value_columns": [
+          "employee_count"
+        ],
+        "tolerance": 0
+      },
+      "chart_required": true
+    },
+    {
+      "case_id": "orders_001",
+      "dataset_file": "orders.csv",
+      "category": "distribution",
+      "question": "统计不同订单状态的订单数量，按照数量从高到低排序，并生成柱状图。结果包含order_status和order_count两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "order_status": "已完成",
+            "order_count": 148
+          },
+          {
+            "order_status": "已取消",
+            "order_count": 20
+          },
+          {
+            "order_status": "已退款",
+            "order_count": 12
+          }
+        ],
+        "key_columns": [
+          "order_status"
+        ],
+        "value_columns": [
+          "order_count"
+        ],
+        "tolerance": 0
+      },
+      "chart_required": true
+    },
+    {
+      "case_id": "orders_002",
+      "dataset_file": "orders.csv",
+      "category": "filter_aggregation",
+      "question": "仅分析已完成订单，统计各产品类别的订单总金额，按照总金额从高到低排序。结果包含category和total_revenue两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "category": "食品",
+            "total_revenue": 119829.64
+          },
+          {
+            "category": "服装",
+            "total_revenue": 99317.46
+          },
+          {
+            "category": "数码",
+            "total_revenue": 70884.18
+          },
+          {
+            "category": "家居",
+            "total_revenue": 66577.98
+          },
+          {
+            "category": "图书",
+            "total_revenue": 64948.98
+          }
+        ],
+        "key_columns": [
+          "category"
+        ],
+        "value_columns": [
+          "total_revenue"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": false
+    },
+    {
+      "case_id": "orders_003",
+      "dataset_file": "orders.csv",
+      "category": "filter_average",
+      "question": "仅分析已完成订单，比较不同客户类型的平均订单金额，按照平均金额从高到低排序，并生成柱状图。结果包含customer_type和average_order_amount两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "customer_type": "普通客户",
+            "average_order_amount": 2943.13
+          },
+          {
+            "customer_type": "会员客户",
+            "average_order_amount": 2767.77
+          },
+          {
+            "customer_type": "企业客户",
+            "average_order_amount": 2580.98
+          }
+        ],
+        "key_columns": [
+          "customer_type"
+        ],
+        "value_columns": [
+          "average_order_amount"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": true
+    },
+    {
+      "case_id": "orders_004",
+      "dataset_file": "orders.csv",
+      "category": "top_n",
+      "question": "仅分析已完成订单，找出订单总金额最高的前5名客户，按照总金额从高到低排序。结果包含customer_id和total_order_amount两列。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "customer_id": "C036",
+            "total_order_amount": 43415.96
+          },
+          {
+            "customer_id": "C035",
+            "total_order_amount": 31376.06
+          },
+          {
+            "customer_id": "C045",
+            "total_order_amount": 25177.52
+          },
+          {
+            "customer_id": "C025",
+            "total_order_amount": 18416.44
+          },
+          {
+            "customer_id": "C021",
+            "total_order_amount": 18214.52
+          }
+        ],
+        "key_columns": [
+          "customer_id"
+        ],
+        "value_columns": [
+          "total_order_amount"
+        ],
+        "tolerance": 0.01
+      },
+      "chart_required": false
+    },
+    {
+      "case_id": "orders_005",
+      "dataset_file": "orders.csv",
+      "category": "time_series",
+      "question": "仅分析已完成订单，统计每个月的订单数量，按照月份升序排列，并生成折线图。结果包含month和order_count两列，month格式为YYYY-MM。",
+      "expected": {
+        "type": "table",
+        "records": [
+          {
+            "month": "2025-01",
+            "order_count": 18
+          },
+          {
+            "month": "2025-02",
+            "order_count": 10
+          },
+          {
+            "month": "2025-03",
+            "order_count": 12
+          },
+          {
+            "month": "2025-04",
+            "order_count": 17
+          },
+          {
+            "month": "2025-05",
+            "order_count": 14
+          },
+          {
+            "month": "2025-06",
+            "order_count": 16
+          },
+          {
+            "month": "2025-07",
+            "order_count": 11
+          },
+          {
+            "month": "2025-08",
+            "order_count": 10
+          },
+          {
+            "month": "2025-09",
+            "order_count": 11
+          },
+          {
+            "month": "2025-10",
+            "order_count": 12
+          },
+          {
+            "month": "2025-11",
+            "order_count": 9
+          },
+          {
+            "month": "2025-12",
+            "order_count": 8
+          }
+        ],
+        "key_columns": [
+          "month"
+        ],
+        "value_columns": [
+          "order_count"
+        ],
+        "tolerance": 0
+      },
+      "chart_required": true
+    }
+  ]
+}

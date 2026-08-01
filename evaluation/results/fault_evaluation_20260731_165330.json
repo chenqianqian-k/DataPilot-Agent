@@ -1,0 +1,152 @@
+{
+  "benchmark_name": "DataPilot Fault Injection Evaluation",
+  "benchmark_version": "1.0",
+  "created_at": "2026-07-31T16:53:30",
+  "metrics": {
+    "total_cases": 1,
+    "passed_cases": 1,
+    "pass_rate": 100.0,
+    "fault_injected_cases": 1,
+    "fault_injection_rate": 100.0,
+    "failure_triggered_cases": 1,
+    "failure_trigger_rate": 100.0,
+    "error_type_matched_cases": 1,
+    "error_type_match_rate": 100.0,
+    "repair_triggered_cases": 1,
+    "repair_trigger_rate": 100.0,
+    "repair_success_cases": 1,
+    "repair_success_rate": 100.0,
+    "correct_after_repair_cases": 1,
+    "result_accuracy_after_repair": 100.0,
+    "average_repair_count": 1.0,
+    "average_duration_seconds": 14.79,
+    "total_duration_seconds": 14.79
+  },
+  "results": [
+    {
+      "fault_case_id": "fault_sales_001",
+      "base_case_id": "sales_001",
+      "dataset_file": "sales.csv",
+      "question": "统计不同地区的销售总额，按照销售总额从高到低排序，并生成柱状图。结果包含region和total_sales两列。",
+      "fault_type": "column_typo",
+      "expected_error_type": "KeyError",
+      "fault_injected": true,
+      "execution_failed": true,
+      "repair_triggered": true,
+      "execution_succeeded": true,
+      "expected_error_matched": true,
+      "repair_count": 1,
+      "repair_success": true,
+      "result_correct_after_repair": true,
+      "passed": true,
+      "duration_seconds": 14.788,
+      "error_message": null,
+      "agent_response": {
+        "task_id": "task-4cde263994fd4ae596d4cf7bc101476b",
+        "dataset_id": "dataset-sales",
+        "question": "统计不同地区的销售总额，按照销售总额从高到低排序，并生成柱状图。结果包含region和total_sales两列。",
+        "status": "completed",
+        "plan": {
+          "objective": "统计不同地区的销售总额，按销售总额从高到低排序，并生成柱状图，输出包含region和total_sales两列的结果。",
+          "required_columns": [
+            "region",
+            "sales_amount"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "检查原始数据",
+              "description": "检查region和sales_amount字段是否存在缺失或异常值，确认数据类型，为后续聚合做准备。",
+              "operation": "inspect",
+              "required_columns": [
+                "region",
+                "sales_amount"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "按地区汇总销售总额",
+              "description": "以region为分组字段，对sales_amount求和，生成包含region和total_sales的聚合结果。",
+              "operation": "aggregate",
+              "required_columns": [
+                "region",
+                "sales_amount"
+              ]
+            },
+            {
+              "step_id": 3,
+              "title": "按销售总额降序排序",
+              "description": "对上一步生成的汇总结果按照total_sales从高到低进行排序，得到最终排序后的结果表。",
+              "operation": "sort",
+              "required_columns": [
+                "region",
+                "sales_amount"
+              ]
+            },
+            {
+              "step_id": 4,
+              "title": "生成柱状图",
+              "description": "使用排序后的结果，以region为x轴、total_sales为y轴绘制柱状图，直观展示各地区销售总额差异。",
+              "operation": "visualize",
+              "required_columns": [
+                "region",
+                "sales_amount"
+              ]
+            }
+          ],
+          "expected_outputs": [
+            "包含region和total_sales两列的汇总结果，按total_sales从高到低排序",
+            "展示各地区销售总额的柱状图"
+          ],
+          "needs_visualization": true,
+          "chart_type": "bar"
+        },
+        "generated_code": "import pandas as pd\nimport plotly.express as px\n\n# 按地区分组计算销售总额\nresult = df.groupby('region', as_index=False)['sales_amount'].sum()\n# 重命名列为total_sales\nresult = result.rename(columns={'sales_amount': 'total_sales'})\n# 按销售总额从高到低排序\nresult = result.sort_values('total_sales', ascending=False).reset_index(drop=True)\n\n# 生成柱状图\nfig = px.bar(result, x='region', y='total_sales', title='各地区销售总额')",
+        "code_explanation": "错误原因是列名拼写错误：原始代码中使用了'sales_amout'，但数据集中正确的列名是'sales_amount'。修复后使用正确的列名进行分组求和，并重命名为'total_sales'，按降序排序后生成柱状图。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "region": "华东",
+              "total_sales": 1616134.03
+            },
+            {
+              "region": "华南",
+              "total_sales": 1368110.0
+            },
+            {
+              "region": "华北",
+              "total_sales": 1150962.19
+            },
+            {
+              "region": "西南",
+              "total_sales": 878801.76
+            }
+          ],
+          "generated_files": [
+            "/root/autodl-tmp/DataPilot/data/outputs/chart_9a0a7fdc84394c4ba7e5e3e55d166ff3.html"
+          ],
+          "execution_time_seconds": 0.363853
+        },
+        "repair_count": 1,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：432行，9列",
+          "数据画像生成完成",
+          "分析计划生成完成，共4个步骤",
+          "Python分析代码生成完成",
+          "故障注入完成：将字段sales_amount错误替换为sales_amout，预期触发字段不存在错误",
+          "Python代码执行失败：KeyError: 'Column not found: sales_amout'",
+          "第1次代码修复完成",
+          "Python代码执行成功，耗时0.363853秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n按地区统计销售总额并降序排序后，共得到4个地区的汇总结果。**华东地区销售总额最高（约161.61万元），西南地区最低（约87.88万元）**，各地区间销售业绩存在明显差异。\n\n## 关键数据\n\n按销售总额从高到低排序如下：\n\n| 排名 | 地区 | 总销售额（total_sales） |\n|------|------|------------------------|\n| 1 | 华东 | 1,616,134.03 |\n| 2 | 华南 | 1,368,110.00 |\n| 3 | 华北 | 1,150,962.19 |\n| 4 | 西南 | 878,801.76 |\n\n- 华东地区销售额最高，显著领先其他地区。\n- 西南地区销售额最低，与排名第一的华东地区相差约73.73万元。\n\n## 补充说明\n\n- 柱状图已生成，保存为HTML格式文件，可用于直观查看各地区销售总额差异。",
+        "error_message": null
+      }
+    }
+  ]
+}

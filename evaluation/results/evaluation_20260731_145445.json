@@ -1,0 +1,1766 @@
+{
+  "benchmark_name": "DataPilot Basic Evaluation",
+  "benchmark_version": "1.0",
+  "created_at": "2026-07-31T14:54:45",
+  "metrics": {
+    "total_cases": 15,
+    "passed_cases": 15,
+    "pass_rate": 100.0,
+    "execution_success_cases": 15,
+    "execution_success_rate": 100.0,
+    "correct_result_cases": 15,
+    "result_accuracy": 100.0,
+    "first_pass_success_cases": 15,
+    "first_pass_success_rate": 100.0,
+    "repaired_cases": 0,
+    "repair_success_cases": 0,
+    "repair_success_rate": 0.0,
+    "chart_cases": 9,
+    "chart_success_cases": 9,
+    "chart_success_rate": 100.0,
+    "average_repair_count": 0.0,
+    "average_duration_seconds": 28.98,
+    "total_duration_seconds": 434.7
+  },
+  "results": [
+    {
+      "case_id": "sales_001",
+      "dataset_file": "sales.csv",
+      "category": "group_aggregation",
+      "passed": true,
+      "execution_success": true,
+      "result_correct": true,
+      "columns_correct": true,
+      "order_correct": true,
+      "chart_correct": true,
+      "repair_count": 0,
+      "error_message": null,
+      "question": "统计不同地区的销售总额，按照销售总额从高到低排序，并生成柱状图。结果包含region和total_sales两列。",
+      "duration_seconds": 24.661,
+      "agent_response": {
+        "task_id": "task-0aa940d7b5a64a4e90a77ea51c2ad1c6",
+        "dataset_id": "dataset-sales",
+        "question": "统计不同地区的销售总额，按照销售总额从高到低排序，并生成柱状图。结果包含region和total_sales两列。",
+        "status": "completed",
+        "plan": {
+          "objective": "统计不同地区的销售总额，按销售总额从高到低排序，并生成柱状图，输出包含region和total_sales两列的结果。",
+          "required_columns": [
+            "region",
+            "sales_amount"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "检查数据质量",
+              "description": "检查region和sales_amount字段是否存在缺失值、数据类型是否正确，确保后续聚合分析的数据质量。",
+              "operation": "inspect",
+              "required_columns": [
+                "region",
+                "sales_amount"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "按地区聚合销售总额",
+              "description": "按region分组，对sales_amount求和，生成包含region和total_sales的聚合结果。",
+              "operation": "aggregate",
+              "required_columns": [
+                "region",
+                "sales_amount"
+              ]
+            },
+            {
+              "step_id": 3,
+              "title": "按销售总额降序排序",
+              "description": "对上一步生成的包含region和total_sales的结果，按照total_sales从高到低进行排序。",
+              "operation": "sort",
+              "required_columns": [
+                "region",
+                "sales_amount"
+              ]
+            },
+            {
+              "step_id": 4,
+              "title": "生成柱状图",
+              "description": "使用排序后的汇总结果，以region为横轴、total_sales为纵轴绘制柱状图，直观展示不同地区的销售总额差异。",
+              "operation": "visualize",
+              "required_columns": [
+                "region",
+                "sales_amount"
+              ]
+            }
+          ],
+          "expected_outputs": [
+            "包含region和total_sales两列的汇总结果，按total_sales从高到低排序",
+            "展示不同地区销售总额的柱状图"
+          ],
+          "needs_visualization": true,
+          "chart_type": "bar"
+        },
+        "generated_code": "import pandas as pd\nimport plotly.express as px\n\nresult = df.groupby('region', as_index=False)['sales_amount'].sum().rename(columns={'sales_amount': 'total_sales'}).sort_values('total_sales', ascending=False).reset_index(drop=True)\n\nfig = px.bar(result, x='region', y='total_sales', title='各地区销售总额')\nfig.update_layout(xaxis_title='地区', yaxis_title='销售总额')",
+        "code_explanation": "按region分组计算sales_amount的总和，得到total_sales列，并按total_sales降序排序生成result；同时使用Plotly绘制地区销售总额柱状图赋给fig。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "region": "华东",
+              "total_sales": 1616134.03
+            },
+            {
+              "region": "华南",
+              "total_sales": 1368110.0
+            },
+            {
+              "region": "华北",
+              "total_sales": 1150962.19
+            },
+            {
+              "region": "西南",
+              "total_sales": 878801.76
+            }
+          ],
+          "generated_files": [
+            "/root/autodl-tmp/DataPilot/data/outputs/chart_7c6b7cb3fe904c4bae7ed40240c7a083.html"
+          ],
+          "execution_time_seconds": 0.343673
+        },
+        "repair_count": 0,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：432行，9列",
+          "数据画像生成完成",
+          "分析计划生成完成，共4个步骤",
+          "Python分析代码生成完成",
+          "Python代码执行成功，耗时0.343673秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n不同地区的销售总额已按从高到低排序，并成功生成柱状图。从结果看，**华东地区销售总额最高**，**西南地区销售总额最低**，各地区间存在明显差异。\n\n## 关键数据\n\n| 地区 | 销售总额 |\n|------|----------|\n| 华东 | 1,616,134.03 |\n| 华南 | 1,368,110.00 |\n| 华北 | 1,150,962.19 |\n| 西南 | 878,801.76 |\n\n- 最高：华东（1,616,134.03）\n- 最低：西南（878,801.76）\n- 华东约为西南的 **1.84倍**\n\n## 补充说明\n\n柱状图已生成，可通过 `chart_7c6b7cb3fe904c4bae7ed40240c7a083.html` 文件查看可视化结果。",
+        "error_message": null
+      }
+    },
+    {
+      "case_id": "sales_002",
+      "dataset_file": "sales.csv",
+      "category": "time_series",
+      "passed": true,
+      "execution_success": true,
+      "result_correct": true,
+      "columns_correct": true,
+      "order_correct": true,
+      "chart_correct": true,
+      "repair_count": 0,
+      "error_message": null,
+      "question": "统计每个月的销售总额，按照月份升序排列，并生成折线图。结果包含month和total_sales两列，month格式为YYYY-MM。",
+      "duration_seconds": 24.135,
+      "agent_response": {
+        "task_id": "task-0644458274174b209ead699a0ca3b6a2",
+        "dataset_id": "dataset-sales",
+        "question": "统计每个月的销售总额，按照月份升序排列，并生成折线图。结果包含month和total_sales两列，month格式为YYYY-MM。",
+        "status": "completed",
+        "plan": {
+          "objective": "统计每个月的销售总额，按月份升序排列，并生成折线图以展示月度销售趋势",
+          "required_columns": [
+            "order_date",
+            "sales_amount"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "检查数据质量",
+              "description": "检查order_date和sales_amount字段是否存在缺失值、异常值，并确认数据类型，为后续处理做准备",
+              "operation": "inspect",
+              "required_columns": [
+                "order_date",
+                "sales_amount"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "规范化日期字段",
+              "description": "将order_date从字符串转换为日期时间类型，以确保后续能够正确提取月份信息",
+              "operation": "clean",
+              "required_columns": [
+                "order_date"
+              ]
+            },
+            {
+              "step_id": 3,
+              "title": "提取月份字段",
+              "description": "从order_date中提取年-月信息，生成新的输出字段month，格式为YYYY-MM",
+              "operation": "calculate",
+              "required_columns": [
+                "order_date"
+              ]
+            },
+            {
+              "step_id": 4,
+              "title": "按月汇总销售总额",
+              "description": "按照上一步生成的month字段分组，对sales_amount求和，得到每个月的销售总额total_sales",
+              "operation": "aggregate",
+              "required_columns": [
+                "sales_amount"
+              ]
+            },
+            {
+              "step_id": 5,
+              "title": "按月份升序排序",
+              "description": "将聚合结果按照month字段升序排列，使输出数据从1月到12月有序展示",
+              "operation": "sort",
+              "required_columns": []
+            },
+            {
+              "step_id": 6,
+              "title": "生成月度销售总额折线图",
+              "description": "使用排序后的month和total_sales数据绘制折线图，横轴为month，纵轴为total_sales，展示月度销售趋势",
+              "operation": "visualize",
+              "required_columns": []
+            }
+          ],
+          "expected_outputs": [
+            "包含month和total_sales两列的月度销售汇总表，且按月份升序排列",
+            "展示每月销售总额的折线图"
+          ],
+          "needs_visualization": true,
+          "chart_type": "line"
+        },
+        "generated_code": "import pandas as pd\nimport plotly.express as px\n\ndf_analysis = df.copy()\n\ndf_analysis['order_date'] = pd.to_datetime(df_analysis['order_date'])\n\ndf_analysis['month'] = df_analysis['order_date'].dt.strftime('%Y-%m')\n\nresult = df_analysis.groupby('month', as_index=False)['sales_amount'].sum().rename(columns={'sales_amount': 'total_sales'})\n\nresult = result.sort_values('month').reset_index(drop=True)\n\nfig = px.line(result, x='month', y='total_sales', title='月度销售总额趋势', markers=True)",
+        "code_explanation": "代码将order_date转换为日期时间类型，从其中提取YYYY-MM格式的月份字段，然后按月份分组对sales_amount求和得到每个月的销售总额。结果按月份升序排列，并生成折线图展示月度销售趋势。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "month": "2025-01",
+              "total_sales": 436048.04
+            },
+            {
+              "month": "2025-02",
+              "total_sales": 380949.31
+            },
+            {
+              "month": "2025-03",
+              "total_sales": 454588.29
+            },
+            {
+              "month": "2025-04",
+              "total_sales": 515581.64
+            },
+            {
+              "month": "2025-05",
+              "total_sales": 374604.6
+            },
+            {
+              "month": "2025-06",
+              "total_sales": 467374.06
+            },
+            {
+              "month": "2025-07",
+              "total_sales": 405218.72
+            },
+            {
+              "month": "2025-08",
+              "total_sales": 349690.79
+            },
+            {
+              "month": "2025-09",
+              "total_sales": 415054.97
+            },
+            {
+              "month": "2025-10",
+              "total_sales": 442826.27
+            },
+            {
+              "month": "2025-11",
+              "total_sales": 381520.89
+            },
+            {
+              "month": "2025-12",
+              "total_sales": 390550.4
+            }
+          ],
+          "generated_files": [
+            "/root/autodl-tmp/DataPilot/data/outputs/chart_3094625b03634f1595064d627ee62533.html"
+          ],
+          "execution_time_seconds": 0.125907
+        },
+        "repair_count": 0,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：432行，9列",
+          "数据画像生成完成",
+          "分析计划生成完成，共6个步骤",
+          "Python分析代码生成完成",
+          "Python代码执行成功，耗时0.125907秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n已完成每月销售总额的统计，并将结果按月份升序排列。数据覆盖2025年1月至2025年12月，共12个月。从月度销售趋势来看，**4月销售总额最高**，为515,581.64；**8月销售总额最低**，为349,690.79，两者相差约165,890.85。\n\n## 关键数据\n\n| 月份 | 销售总额 |\n|------|---------|\n| 2025-01 | 436,048.04 |\n| 2025-02 | 380,949.31 |\n| 2025-03 | 454,588.29 |\n| 2025-04 | 515,581.64 (最高) |\n| 2025-05 | 374,604.60 |\n| 2025-06 | 467,374.06 |\n| 2025-07 | 405,218.72 |\n| 2025-08 | 349,690.79 (最低) |\n| 2025-09 | 415,054.97 |\n| 2025-10 | 442,826.27 |\n| 2025-11 | 381,520.89 |\n| 2025-12 | 390,550.40 |\n\n## 补充说明\n\n- 销售数据仅覆盖2025年全年，未包含其他年份，因此趋势分析仅限于该年度内。\n- 折线图已生成并保存至本地HTML文件，可直观展示月度销售波动。",
+        "error_message": null
+      }
+    },
+    {
+      "case_id": "sales_003",
+      "dataset_file": "sales.csv",
+      "category": "ranking",
+      "passed": true,
+      "execution_success": true,
+      "result_correct": true,
+      "columns_correct": true,
+      "order_correct": true,
+      "chart_correct": true,
+      "repair_count": 0,
+      "error_message": null,
+      "question": "统计不同产品类别的利润总额，按照利润从高到低排序。结果包含category和total_profit两列。",
+      "duration_seconds": 37.747,
+      "agent_response": {
+        "task_id": "task-7531200fdba4419288cc65b398ee4f77",
+        "dataset_id": "dataset-sales",
+        "question": "统计不同产品类别的利润总额，按照利润从高到低排序。结果包含category和total_profit两列。",
+        "status": "completed",
+        "plan": {
+          "objective": "统计不同产品类别的利润总额，并按利润从高到低排序，输出包含category和total_profit两列的结果。",
+          "required_columns": [
+            "category",
+            "profit"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "按产品类别聚合利润",
+              "description": "按category字段对原始数据进行分组，对每组内的profit字段求和，生成新的输出字段total_profit，得到每个产品类别的利润总额。",
+              "operation": "aggregate",
+              "required_columns": [
+                "category",
+                "profit"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "按利润总额降序排序",
+              "description": "对上一步得到的聚合结果，按照total_profit字段从高到低进行排序，使利润最高的产品类别排在前面。",
+              "operation": "sort",
+              "required_columns": []
+            }
+          ],
+          "expected_outputs": [
+            "包含category和total_profit两列的汇总表，按total_profit从高到低排序"
+          ],
+          "needs_visualization": false,
+          "chart_type": null
+        },
+        "generated_code": "result = df.groupby('category', as_index=False)['profit'].sum()\nresult = result.rename(columns={'profit': 'total_profit'}).sort_values('total_profit', ascending=False).reset_index(drop=True)",
+        "code_explanation": "代码按category字段对profit进行分组求和，生成total_profit列，并按total_profit从高到低排序，最终结果保存在result变量中。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "category": "电子产品",
+              "total_profit": 414343.1
+            },
+            {
+              "category": "家具",
+              "total_profit": 306244.26
+            },
+            {
+              "category": "办公用品",
+              "total_profit": 187694.53
+            }
+          ],
+          "generated_files": [],
+          "execution_time_seconds": 0.00965
+        },
+        "repair_count": 0,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：432行，9列",
+          "数据画像生成完成",
+          "分析计划生成完成，共2个步骤",
+          "Python分析代码生成完成",
+          "Python代码执行成功，耗时0.00965秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n按产品类别统计利润总额后，**电子产品**的利润总额最高，为 **414,343.10**；其次是**家具**，利润总额为 **306,244.26**；**办公用品**的利润总额最低，为 **187,694.53**。\n\n## 关键数据\n\n| 排名 | 产品类别 | 利润总额 |\n|------|----------|----------|\n| 1 | 电子产品 | 414,343.10 |\n| 2 | 家具 | 306,244.26 |\n| 3 | 办公用品 | 187,694.53 |\n\n电子产品利润总额比排名第二的家具高出约 **35.3%**，是办公用品利润总额的 **2.2倍**，不同产品类别之间的利润差距较为明显。\n\n## 补充说明\n\n本结果为代码实际执行返回的全部数据，仅包含上述三个产品类别。若原始数据中存在其他类别，说明它们在当前数据集中无相应利润记录或被汇总。",
+        "error_message": null
+      }
+    },
+    {
+      "case_id": "sales_004",
+      "dataset_file": "sales.csv",
+      "category": "top_n",
+      "passed": true,
+      "execution_success": true,
+      "result_correct": true,
+      "columns_correct": true,
+      "order_correct": true,
+      "chart_correct": true,
+      "repair_count": 0,
+      "error_message": null,
+      "question": "找出销售总额最高的前3名销售人员，按照销售总额从高到低排序，并生成柱状图。结果包含salesperson和total_sales两列。",
+      "duration_seconds": 18.878,
+      "agent_response": {
+        "task_id": "task-0f598108959b4570ad719c0b1998b1c0",
+        "dataset_id": "dataset-sales",
+        "question": "找出销售总额最高的前3名销售人员，按照销售总额从高到低排序，并生成柱状图。结果包含salesperson和total_sales两列。",
+        "status": "completed",
+        "plan": {
+          "objective": "统计每位销售人员的销售总额，找出销售总额最高的前3名销售人员，并按销售总额从高到低排序，最后生成柱状图进行可视化展示。",
+          "required_columns": [
+            "salesperson",
+            "sales_amount"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "检查数据基本信息",
+              "description": "读取salesperson和sales_amount字段，检查数据是否存在缺失值或异常值，确保数据质量满足后续聚合分析要求。",
+              "operation": "inspect",
+              "required_columns": [
+                "salesperson",
+                "sales_amount"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "按销售人员聚合计算销售总额",
+              "description": "按salesperson分组，对sales_amount求和，生成每位销售人员的销售总额字段total_sales。",
+              "operation": "aggregate",
+              "required_columns": [
+                "salesperson",
+                "sales_amount"
+              ]
+            },
+            {
+              "step_id": 3,
+              "title": "排序并筛选销售总额前3名",
+              "description": "根据total_sales从高到低对销售人员排序，并提取销售总额最高的前3名销售人员。",
+              "operation": "sort",
+              "required_columns": [
+                "salesperson",
+                "sales_amount"
+              ]
+            },
+            {
+              "step_id": 4,
+              "title": "生成前3名销售人员销售总额柱状图",
+              "description": "基于前3名销售人员的salesperson和total_sales数据，绘制柱状图，直观展示销售总额对比。",
+              "operation": "visualize",
+              "required_columns": [
+                "salesperson",
+                "sales_amount"
+              ]
+            }
+          ],
+          "expected_outputs": [
+            "包含salesperson和total_sales两列的前3名销售人员汇总结果，按total_sales从高到低排序",
+            "展示前3名销售人员销售总额对比的柱状图"
+          ],
+          "needs_visualization": true,
+          "chart_type": "bar"
+        },
+        "generated_code": "import pandas as pd\nimport plotly.express as px\n\n# 按销售人员分组计算销售总额\nsales_summary = df.groupby('salesperson', as_index=False)['sales_amount'].sum()\n# 重命名列为total_sales\nsales_summary = sales_summary.rename(columns={'sales_amount': 'total_sales'})\n# 按销售总额从高到低排序\nsales_summary = sales_summary.sort_values('total_sales', ascending=False)\n# 提取前3名销售人员\nresult = sales_summary.head(3)\n\n# 生成柱状图\nfig = px.bar(result, x='salesperson', y='total_sales', title='销售总额最高的前3名销售人员', text='total_sales')",
+        "code_explanation": "代码按salesperson分组对sales_amount求和得到每位销售人员的销售总额，然后按总额降序排序并提取前3名，最后使用Plotly绘制柱状图展示前3名销售人员的销售总额对比。结果保存在result中，图表保存在fig中。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "salesperson": "赵敏",
+              "total_sales": 1011514.52
+            },
+            {
+              "salesperson": "王强",
+              "total_sales": 858616.46
+            },
+            {
+              "salesperson": "李娜",
+              "total_sales": 844129.87
+            }
+          ],
+          "generated_files": [
+            "/root/autodl-tmp/DataPilot/data/outputs/chart_f6ffe518300543b8a6108540e591abdc.html"
+          ],
+          "execution_time_seconds": 0.120995
+        },
+        "repair_count": 0,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：432行，9列",
+          "数据画像生成完成",
+          "分析计划生成完成，共4个步骤",
+          "Python分析代码生成完成",
+          "Python代码执行成功，耗时0.120995秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n销售总额最高的前3名销售人员依次为**赵敏、王强、李娜**，其中赵敏的销售总额最高，达到**1,011,514.52元**。已生成对应的柱状图，保存在HTML格式文件中，便于直观对比前三名销售人员的销售业绩。\n\n## 关键数据\n\n| 排名 | 销售人员 | 销售总额（元） |\n|------|----------|---------------|\n| 1 | 赵敏 | 1,011,514.52 |\n| 2 | 王强 | 858,616.46 |\n| 3 | 李娜 | 844,129.87 |\n\n最高销售总额（赵敏）比第三名（李娜）高出约**167,384.65元**，差距明显。\n\n## 补充说明\n\n柱状图已生成并保存，可在本地打开查看。本次分析仅基于前3名销售人员的汇总数据，未涉及更广泛的业绩分布情况。",
+        "error_message": null
+      }
+    },
+    {
+      "case_id": "sales_005",
+      "dataset_file": "sales.csv",
+      "category": "average",
+      "passed": true,
+      "execution_success": true,
+      "result_correct": true,
+      "columns_correct": true,
+      "order_correct": true,
+      "chart_correct": true,
+      "repair_count": 0,
+      "error_message": null,
+      "question": "计算不同地区的平均单笔销售额，按照平均销售额从高到低排序。结果包含region和average_sales两列。",
+      "duration_seconds": 45.602,
+      "agent_response": {
+        "task_id": "task-8bfe15d5c0bd456e83ff79e75acb2b61",
+        "dataset_id": "dataset-sales",
+        "question": "计算不同地区的平均单笔销售额，按照平均销售额从高到低排序。结果包含region和average_sales两列。",
+        "status": "completed",
+        "plan": {
+          "objective": "计算每个地区的平均单笔销售额（sales_amount的平均值），并按平均销售额从高到低排序，输出包含region和average_sales的最终结果。",
+          "required_columns": [
+            "region",
+            "sales_amount"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "按地区聚合计算平均销售额",
+              "description": "以region为分组键，对sales_amount计算平均值，生成新字段average_sales，表示每个地区的平均单笔销售额。",
+              "operation": "aggregate",
+              "required_columns": [
+                "region",
+                "sales_amount"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "按平均销售额降序排序",
+              "description": "对上一步得到的聚合结果，按average_sales从高到低排序。本步骤操作的是聚合后的数据，不需要读取原始字段。",
+              "operation": "sort",
+              "required_columns": []
+            },
+            {
+              "step_id": 3,
+              "title": "可视化平均销售额",
+              "description": "使用条形图展示各地区平均销售额的对比。本步骤基于最终聚合结果，不需要读取原始字段。",
+              "operation": "visualize",
+              "required_columns": []
+            }
+          ],
+          "expected_outputs": [
+            "包含region和average_sales两列的表，每个地区一行，按average_sales从高到低排列",
+            "展示各地区平均销售额对比的条形图"
+          ],
+          "needs_visualization": true,
+          "chart_type": "bar"
+        },
+        "generated_code": "import pandas as pd\nimport plotly.express as px\n\nresult = df.groupby('region', as_index=False)['sales_amount'].mean()\nresult = result.rename(columns={'sales_amount': 'average_sales'})\nresult = result.sort_values('average_sales', ascending=False).reset_index(drop=True)\n\nfig = px.bar(result, x='region', y='average_sales', title='各地区平均单笔销售额对比')\n",
+        "code_explanation": "按地区分组计算sales_amount的平均值，生成average_sales字段，并按平均销售额降序排序，最终结果存放在result中；同时使用Plotly绘制了各地区平均销售额的条形图fig。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "region": "华东",
+              "average_sales": 14964.2039814815
+            },
+            {
+              "region": "华南",
+              "average_sales": 12667.6851851852
+            },
+            {
+              "region": "华北",
+              "average_sales": 10657.0573148148
+            },
+            {
+              "region": "西南",
+              "average_sales": 8137.0533333333
+            }
+          ],
+          "generated_files": [
+            "/root/autodl-tmp/DataPilot/data/outputs/chart_7f5b5f5f8f914ecca586c4e5573a9e06.html"
+          ],
+          "execution_time_seconds": 0.119046
+        },
+        "repair_count": 0,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：432行，9列",
+          "数据画像生成完成",
+          "分析计划生成完成，共3个步骤",
+          "Python分析代码生成完成",
+          "Python代码执行成功，耗时0.119046秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n已按地区计算平均单笔销售额，并按照平均销售额从高到低排序。结果显示：**华东地区平均单笔销售额最高**，达到约 **14,964.20**；**西南地区最低**，约为 **8,137.05**。各地区之间存在明显的销售水平差异，华东地区平均单笔销售额约为西南地区的 **1.84 倍**。\n\n## 关键数据\n\n各地区的平均单笔销售额（average_sales）排名如下：\n\n| 排名 | 地区 | 平均单笔销售额 |\n|------|------|----------------|\n| 1 | 华东 | 14,964.20 |\n| 2 | 华南 | 12,667.69 |\n| 3 | 华北 | 10,657.06 |\n| 4 | 西南 | 8,137.05 |\n\n## 补充说明\n\n- 最高值（华东）与最低值（西南）之间的差额约为 **6,827.15**。\n- 已同步生成各地区平均销售额对比的条形图（HTML 格式），便于直观查看差异。",
+        "error_message": null
+      }
+    },
+    {
+      "case_id": "employees_001",
+      "dataset_file": "employees.xlsx",
+      "category": "count",
+      "passed": true,
+      "execution_success": true,
+      "result_correct": true,
+      "columns_correct": true,
+      "order_correct": true,
+      "chart_correct": true,
+      "repair_count": 0,
+      "error_message": null,
+      "question": "统计每个部门的员工人数，按照人数从高到低排序，并生成柱状图。结果包含department和employee_count两列。",
+      "duration_seconds": 70.96,
+      "agent_response": {
+        "task_id": "task-2eb3ee9b96454d939497b665ceac03cd",
+        "dataset_id": "dataset-employees",
+        "question": "统计每个部门的员工人数，按照人数从高到低排序，并生成柱状图。结果包含department和employee_count两列。",
+        "status": "completed",
+        "plan": {
+          "objective": "统计每个部门的员工人数，按照人数从高到低排序，并生成柱状图，结果包含department和employee_count两列。",
+          "required_columns": [
+            "department",
+            "employee_id"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "检查数据完整性",
+              "description": "检查department和employee_id字段是否存在缺失或异常值，确保后续统计的准确性。",
+              "operation": "inspect",
+              "required_columns": [
+                "department",
+                "employee_id"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "统计各部门员工人数",
+              "description": "按department字段分组，对employee_id进行计数，生成包含department和employee_count的聚合结果。employee_count为每个部门的员工人数。",
+              "operation": "aggregate",
+              "required_columns": [
+                "department",
+                "employee_id"
+              ]
+            },
+            {
+              "step_id": 3,
+              "title": "按人数降序排序",
+              "description": "对上一步生成的聚合结果按照employee_count从高到低进行排序，得到最终的统计表。",
+              "operation": "sort",
+              "required_columns": []
+            },
+            {
+              "step_id": 4,
+              "title": "可视化柱状图",
+              "description": "基于排序后的统计结果，绘制柱状图，横轴为department，纵轴为employee_count，直观展示各部门人数差异。",
+              "operation": "visualize",
+              "required_columns": []
+            }
+          ],
+          "expected_outputs": [
+            "包含department和employee_count两列的统计结果，按employee_count降序排列",
+            "柱状图：x轴为department，y轴为employee_count"
+          ],
+          "needs_visualization": true,
+          "chart_type": "bar"
+        },
+        "generated_code": "import pandas as pd\nimport plotly.express as px\n\n# 检查数据完整性：确保department和employee_id无缺失\nmissing_department = df['department'].isna().sum()\nmissing_employee_id = df['employee_id'].isna().sum()\nif missing_department > 0 or missing_employee_id > 0:\n    raise ValueError('department或employee_id存在缺失值')\n\n# 统计每个部门的员工人数\nresult = df.groupby('department')['employee_id'].count().reset_index(name='employee_count')\n\n# 按人数从高到低排序\nresult = result.sort_values('employee_count', ascending=False).reset_index(drop=True)\n\n# 绘制柱状图：x轴为部门，y轴为员工人数\nfig = px.bar(result, x='department', y='employee_count', title='各部门员工人数柱状图')",
+        "code_explanation": "代码检查了department和employee_id字段的完整性，然后按department分组对employee_id计数得到各部门员工人数，并降序排序，最后用Plotly Express绘制柱状图。最终统计结果保存在result变量中，图表对象保存在fig变量中。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "department": "研发部",
+              "employee_count": 24
+            },
+            {
+              "department": "销售部",
+              "employee_count": 18
+            },
+            {
+              "department": "市场部",
+              "employee_count": 12
+            },
+            {
+              "department": "人力资源部",
+              "employee_count": 8
+            },
+            {
+              "department": "财务部",
+              "employee_count": 8
+            }
+          ],
+          "generated_files": [
+            "/root/autodl-tmp/DataPilot/data/outputs/chart_9902afe6682a4a31a4ec73466ebc3910.html"
+          ],
+          "execution_time_seconds": 0.113553
+        },
+        "repair_count": 0,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：70行，9列",
+          "数据画像生成完成",
+          "分析计划生成完成，共4个步骤",
+          "Python分析代码生成完成",
+          "Python代码执行成功，耗时0.113553秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n已完成各部门员工人数统计，并按人数从高到低排序。**研发部**的员工人数最多（24人），**人力资源部**和**财务部**的员工人数最少（各8人）。各部门员工人数差异明显，研发部人数约为最少部门的3倍。\n\n## 关键数据\n\n各部门员工人数（从高到低）：\n\n| 部门 | 员工人数 |\n|------|---------|\n| 研发部 | 24 |\n| 销售部 | 18 |\n| 市场部 | 12 |\n| 人力资源部 | 8 |\n| 财务部 | 8 |\n\n## 补充说明\n\n- 人力资源部与财务部员工人数相同，并列末位。\n- 柱状图已生成，可直观查看各部门人数对比。",
+        "error_message": null
+      }
+    },
+    {
+      "case_id": "employees_002",
+      "dataset_file": "employees.xlsx",
+      "category": "average",
+      "passed": true,
+      "execution_success": true,
+      "result_correct": true,
+      "columns_correct": true,
+      "order_correct": true,
+      "chart_correct": true,
+      "repair_count": 0,
+      "error_message": null,
+      "question": "计算每个部门的平均月薪，按照平均月薪从高到低排序。结果包含department和average_salary两列。",
+      "duration_seconds": 17.493,
+      "agent_response": {
+        "task_id": "task-ccd7dc31142e4892bb3faf72f1168bb4",
+        "dataset_id": "dataset-employees",
+        "question": "计算每个部门的平均月薪，按照平均月薪从高到低排序。结果包含department和average_salary两列。",
+        "status": "completed",
+        "plan": {
+          "objective": "计算每个部门的平均月薪，并按平均月薪从高到低排序，输出包含部门及其平均月薪的结果表。",
+          "required_columns": [
+            "department",
+            "monthly_salary"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "按部门分组计算平均月薪",
+              "description": "使用department和monthly_salary字段，按department分组，计算每组的monthly_salary平均值，生成新的输出字段average_salary。",
+              "operation": "aggregate",
+              "required_columns": [
+                "department",
+                "monthly_salary"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "按平均月薪降序排序",
+              "description": "对上一步得到的分组汇总结果，按照average_salary字段从高到低进行排序，得到最终结果。",
+              "operation": "sort",
+              "required_columns": [
+                "department",
+                "monthly_salary"
+              ]
+            }
+          ],
+          "expected_outputs": [
+            "包含department和average_salary两列的汇总结果表",
+            "按average_salary降序排列，每个部门对应一行"
+          ],
+          "needs_visualization": true,
+          "chart_type": "bar"
+        },
+        "generated_code": "import pandas as pd\nimport plotly.express as px\n\nresult = (\n    df.groupby('department')['monthly_salary']\n      .mean()\n      .reset_index(name='average_salary')\n      .sort_values('average_salary', ascending=False)\n      .reset_index(drop=True)\n)\n\nfig = px.bar(\n    result,\n    x='department',\n    y='average_salary',\n    title='各部门平均月薪',\n    text='average_salary',\n    category_orders={'department': result['department'].tolist()}\n)\nfig.update_layout(xaxis_title='部门', yaxis_title='平均月薪')\nfig.update_traces(texttemplate='%{text:.2f}', textposition='outside')",
+        "code_explanation": "按department分组计算monthly_salary的平均值，生成average_salary字段，并按平均月薪降序排序，最终结果保存在result中；同时使用Plotly绘制柱状图展示各部门平均月薪。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "department": "研发部",
+              "average_salary": 23461.1404166667
+            },
+            {
+              "department": "销售部",
+              "average_salary": 19346.8861111111
+            },
+            {
+              "department": "财务部",
+              "average_salary": 18931.6525
+            },
+            {
+              "department": "人力资源部",
+              "average_salary": 18178.9275
+            },
+            {
+              "department": "市场部",
+              "average_salary": 17557.1008333333
+            }
+          ],
+          "generated_files": [
+            "/root/autodl-tmp/DataPilot/data/outputs/chart_3694931879bf4982bf122f0f57022a87.html"
+          ],
+          "execution_time_seconds": 0.12
+        },
+        "repair_count": 0,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：70行，9列",
+          "数据画像生成完成",
+          "分析计划生成完成，共2个步骤",
+          "Python分析代码生成完成",
+          "Python代码执行成功，耗时0.12秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n已按部门计算平均月薪并按从高到低排序。结果显示，**研发部**的平均月薪最高，为约 **23,461.14 元**；**市场部**的平均月薪最低，为约 **17,557.10 元**，五个部门的平均月薪存在明显差距（最高与最低相差约 5,904 元）。\n\n## 关键数据\n\n| 部门 | 平均月薪（元） |\n|------|---------------|\n| 研发部 | 23,461.14 |\n| 销售部 | 19,346.89 |\n| 财务部 | 18,931.65 |\n| 人力资源部 | 18,178.93 |\n| 市场部 | 17,557.10 |\n\n## 补充说明\n\n各数据均为根据现有记录计算的平均值，未经过四舍五入处理。部门间薪资排序清晰，研发部显著领先，市场部相对靠后。",
+        "error_message": null
+      }
+    },
+    {
+      "case_id": "employees_003",
+      "dataset_file": "employees.xlsx",
+      "category": "group_comparison",
+      "passed": true,
+      "execution_success": true,
+      "result_correct": true,
+      "columns_correct": true,
+      "order_correct": true,
+      "chart_correct": true,
+      "repair_count": 0,
+      "error_message": null,
+      "question": "比较不同学历员工的平均月薪，按照平均月薪从高到低排序，并生成柱状图。结果包含education和average_salary两列。",
+      "duration_seconds": 27.987,
+      "agent_response": {
+        "task_id": "task-d8799244013b47f0ab962df464ee7d0c",
+        "dataset_id": "dataset-employees",
+        "question": "比较不同学历员工的平均月薪，按照平均月薪从高到低排序，并生成柱状图。结果包含education和average_salary两列。",
+        "status": "completed",
+        "plan": {
+          "objective": "按学历分组统计员工的平均月薪，并按平均月薪从高到低排序，生成柱状图，以便比较不同学历员工的薪资水平。",
+          "required_columns": [
+            "education",
+            "monthly_salary"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "查看学历和月薪字段的基本情况",
+              "description": "检查education和monthly_salary字段是否存在缺失值、数据类型是否正常，确保数据可用于后续聚合计算。",
+              "operation": "inspect",
+              "required_columns": [
+                "education",
+                "monthly_salary"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "按教育水平分组计算平均月薪",
+              "description": "使用education字段进行分组，对monthly_salary字段计算平均值，生成包含education和average_salary的聚合结果。average_salary为各学历员工的平均月薪。",
+              "operation": "aggregate",
+              "required_columns": [
+                "education",
+                "monthly_salary"
+              ]
+            },
+            {
+              "step_id": 3,
+              "title": "按平均月薪从高到低排序",
+              "description": "根据上一步生成的average_salary字段，对聚合结果进行降序排序，使学历按照平均月薪从高到低排列。",
+              "operation": "sort",
+              "required_columns": []
+            },
+            {
+              "step_id": 4,
+              "title": "生成不同学历平均月薪柱状图",
+              "description": "使用education作为横轴、average_salary作为纵轴，绘制柱状图，直观展示不同学历员工的平均月薪差异。",
+              "operation": "visualize",
+              "required_columns": []
+            }
+          ],
+          "expected_outputs": [
+            "包含education和average_salary两列的汇总结果，其中average_salary为各学历员工的平均月薪",
+            "按average_salary降序排序后的学历平均月薪表格",
+            "展示不同学历平均月薪的柱状图"
+          ],
+          "needs_visualization": true,
+          "chart_type": "bar"
+        },
+        "generated_code": "import pandas as pd\nimport plotly.express as px\n\n# 按学历分组计算平均月薪，并重命名列为 average_salary\nresult = df.groupby('education', as_index=False)['monthly_salary'].mean()\nresult.columns = ['education', 'average_salary']\n\n# 按平均月薪从高到低排序\nresult = result.sort_values('average_salary', ascending=False).reset_index(drop=True)\n\n# 生成柱状图\nfig = px.bar(result, x='education', y='average_salary', title='不同学历员工的平均月薪')",
+        "code_explanation": "代码按education字段分组，计算monthly_salary的平均值，生成包含education和average_salary两列的DataFrame，并按average_salary降序排序。最后使用Plotly Express绘制柱状图，展示不同学历员工的平均月薪差异。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "education": "博士",
+              "average_salary": 24890.9466666667
+            },
+            {
+              "education": "硕士",
+              "average_salary": 22427.2738095238
+            },
+            {
+              "education": "本科",
+              "average_salary": 18571.2265116279
+            }
+          ],
+          "generated_files": [
+            "/root/autodl-tmp/DataPilot/data/outputs/chart_91a19612c1a94afe92c970227fed24e2.html"
+          ],
+          "execution_time_seconds": 0.111061
+        },
+        "repair_count": 0,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：70行，9列",
+          "数据画像生成完成",
+          "分析计划生成完成，共4个步骤",
+          "Python分析代码生成完成",
+          "Python代码执行成功，耗时0.111061秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n按学历分组统计员工平均月薪后可以看到，**学历越高，平均月薪越高**。博士学历员工的平均月薪最高，硕士次之，本科最低。三组学历的平均月薪呈明显梯次分布，已按从高到低排序。\n\n## 关键数据\n\n| 学历 | 平均月薪（元） |\n|------|---------------|\n| 博士 | 24,890.95 |\n| 硕士 | 22,427.27 |\n| 本科 | 18,571.23 |\n\n- **最高**：博士学历，平均月薪约 **24,890.95 元**\n- **最低**：本科学历，平均月薪约 **18,571.23 元**\n- **博士比硕士高约 2,463.67 元**，硕士比本科高约 **3,856.05 元**，博士比本科高约 **6,319.72 元**，学历之间的薪资差距较为显著。\n\n柱状图已生成，文件路径为：`/root/autodl-tmp/DataPilot/data/outputs/chart_91a19612c1a94afe92c970227fed24e2.html`。\n\n## 补充说明\n\n本次统计仅覆盖数据集中出现的三个学历类别（博士、硕士、本科），未包含其他学历选项；平均月薪基于各学历组内所有样本的等权平均计算。",
+        "error_message": null
+      }
+    },
+    {
+      "case_id": "employees_004",
+      "dataset_file": "employees.xlsx",
+      "category": "performance",
+      "passed": true,
+      "execution_success": true,
+      "result_correct": true,
+      "columns_correct": true,
+      "order_correct": true,
+      "chart_correct": true,
+      "repair_count": 0,
+      "error_message": null,
+      "question": "计算各部门的平均绩效分数，按照平均绩效从高到低排序。结果包含department和average_performance两列。",
+      "duration_seconds": 22.034,
+      "agent_response": {
+        "task_id": "task-1a8f827d09544b0db07835441def7866",
+        "dataset_id": "dataset-employees",
+        "question": "计算各部门的平均绩效分数，按照平均绩效从高到低排序。结果包含department和average_performance两列。",
+        "status": "completed",
+        "plan": {
+          "objective": "计算各部门的平均绩效分数，并按照平均绩效从高到低排序，得到包含部门和平均绩效的结果表。",
+          "required_columns": [
+            "department",
+            "performance_score"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "检查数据完整性",
+              "description": "查看department和performance_score字段是否存在缺失或异常值，确保后续计算的数据质量。",
+              "operation": "clean",
+              "required_columns": [
+                "department",
+                "performance_score"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "按部门计算平均绩效",
+              "description": "以department为分组字段，对performance_score计算平均值，生成新字段average_performance，表示各部门的平均绩效分数。",
+              "operation": "aggregate",
+              "required_columns": [
+                "department",
+                "performance_score"
+              ]
+            },
+            {
+              "step_id": 3,
+              "title": "按平均绩效降序排序",
+              "description": "根据上一步得到的average_performance字段，对结果按从高到低的顺序进行排序，最终输出包含department和average_performance的结果表。",
+              "operation": "sort",
+              "required_columns": []
+            }
+          ],
+          "expected_outputs": [
+            "包含department和average_performance两列的数据表",
+            "各部门平均绩效按从高到低排序的最终结果"
+          ],
+          "needs_visualization": true,
+          "chart_type": "bar"
+        },
+        "generated_code": "import pandas as pd\nimport numpy as np\nimport plotly.express as px\n\n# 按部门分组计算平均绩效\nresult = df.groupby('department', as_index=False)['performance_score'].mean()\n\n# 重命名列为 average_performance\nresult = result.rename(columns={'performance_score': 'average_performance'})\n\n# 按平均绩效从高到低排序\nresult = result.sort_values('average_performance', ascending=False).reset_index(drop=True)\n\n# 创建柱状图可视化\nfig = px.bar(result, x='department', y='average_performance',\n             title='各部门平均绩效排序',\n             labels={'average_performance': '平均绩效', 'department': '部门'})",
+        "code_explanation": "代码使用 pandas 对数据按部门分组计算 performance_score 的平均值，生成包含 department 和 average_performance 两列的结果表，并按平均绩效从高到低排序；同时使用 Plotly Express 创建柱状图展示各部门平均绩效。最终结果保存在 result 变量中，图表对象保存在 fig 变量中。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "department": "市场部",
+              "average_performance": 85.2333333333
+            },
+            {
+              "department": "销售部",
+              "average_performance": 84.3166666667
+            },
+            {
+              "department": "财务部",
+              "average_performance": 83.325
+            },
+            {
+              "department": "人力资源部",
+              "average_performance": 80.6375
+            },
+            {
+              "department": "研发部",
+              "average_performance": 80.3625
+            }
+          ],
+          "generated_files": [
+            "/root/autodl-tmp/DataPilot/data/outputs/chart_8184735efe034fe48c55cb346d1f4fc6.html"
+          ],
+          "execution_time_seconds": 0.115085
+        },
+        "repair_count": 0,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：70行，9列",
+          "数据画像生成完成",
+          "分析计划生成完成，共3个步骤",
+          "Python分析代码生成完成",
+          "Python代码执行成功，耗时0.115085秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n各部门平均绩效分数已按从高到低排序完成。**市场部平均绩效最高（85.23分），研发部最低（80.36分）**，部门间平均绩效存在一定差距，最高与最低相差约4.87分。\n\n## 关键数据\n\n| 部门 | 平均绩效 |\n|------|---------|\n| 市场部 | 85.23 |\n| 销售部 | 84.32 |\n| 财务部 | 83.33 |\n| 人力资源部 | 80.64 |\n| 研发部 | 80.36 |\n\n## 补充说明\n\n本结果基于绩效数据完整且无异常值时的平均值计算；销售部与市场部差距较小（0.92分），人力资源部与研发部非常接近（仅差0.28分）。",
+        "error_message": null
+      }
+    },
+    {
+      "case_id": "employees_005",
+      "dataset_file": "employees.xlsx",
+      "category": "distribution",
+      "passed": true,
+      "execution_success": true,
+      "result_correct": true,
+      "columns_correct": true,
+      "order_correct": true,
+      "chart_correct": true,
+      "repair_count": 0,
+      "error_message": null,
+      "question": "统计不同城市的员工人数，按照人数从高到低排序，并生成柱状图。结果包含city和employee_count两列。",
+      "duration_seconds": 16.551,
+      "agent_response": {
+        "task_id": "task-65ba60005a4343baaae4e5694b159f6e",
+        "dataset_id": "dataset-employees",
+        "question": "统计不同城市的员工人数，按照人数从高到低排序，并生成柱状图。结果包含city和employee_count两列。",
+        "status": "completed",
+        "plan": {
+          "objective": "统计不同城市的员工人数，按人数从高到低排序，并生成柱状图，最终输出包含city和employee_count两列的结果。",
+          "required_columns": [
+            "city"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "检查city字段",
+              "description": "读取city字段，检查其唯一值和数据完整性，为分组计数做准备。",
+              "operation": "inspect",
+              "required_columns": [
+                "city"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "按城市分组统计员工人数",
+              "description": "按city进行分组，统计每个城市的员工人数，生成包含city和employee_count的聚合结果。",
+              "operation": "aggregate",
+              "required_columns": [
+                "city"
+              ]
+            },
+            {
+              "step_id": 3,
+              "title": "按员工人数降序排序",
+              "description": "将上一步得到的聚合结果按照employee_count从高到低排序，确保输出顺序符合用户要求。",
+              "operation": "sort",
+              "required_columns": [
+                "city"
+              ]
+            },
+            {
+              "step_id": 4,
+              "title": "生成柱状图",
+              "description": "基于排序后的city和employee_count数据绘制柱状图，直观展示各城市员工人数差异。",
+              "operation": "visualize",
+              "required_columns": [
+                "city"
+              ]
+            }
+          ],
+          "expected_outputs": [
+            "包含city和employee_count两列的统计结果，按员工人数从高到低排序",
+            "展示各城市员工人数的柱状图"
+          ],
+          "needs_visualization": true,
+          "chart_type": "bar"
+        },
+        "generated_code": "import pandas as pd\nimport plotly.express as px\n\n# 复制数据，避免修改原始df\ndata = df.copy()\n\n# 按城市分组统计员工人数\nresult = data.groupby('city').size().reset_index(name='employee_count')\n\n# 按员工人数从高到低排序\nresult = result.sort_values('employee_count', ascending=False).reset_index(drop=True)\n\n# 生成柱状图\nfig = px.bar(result, x='city', y='employee_count', title='各城市员工人数')",
+        "code_explanation": "代码使用groupby按城市统计员工人数，生成包含city和employee_count的结果表，并按人数降序排序；随后用plotly.express绘制柱状图，直观展示各城市员工人数差异。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "city": "上海",
+              "employee_count": 24
+            },
+            {
+              "city": "深圳",
+              "employee_count": 22
+            },
+            {
+              "city": "杭州",
+              "employee_count": 14
+            },
+            {
+              "city": "北京",
+              "employee_count": 10
+            }
+          ],
+          "generated_files": [
+            "/root/autodl-tmp/DataPilot/data/outputs/chart_05d5a051716f4a77933c5268c871c171.html"
+          ],
+          "execution_time_seconds": 0.114078
+        },
+        "repair_count": 0,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：70行，9列",
+          "数据画像生成完成",
+          "分析计划生成完成，共4个步骤",
+          "Python分析代码生成完成",
+          "Python代码执行成功，耗时0.114078秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n按城市统计员工人数，结果中共包含4个城市，已按员工人数从高到低排序。柱状图也已生成，可直观展示各城市员工人数差异。\n\n## 关键数据\n\n| 城市 | 员工人数 |\n|------|----------|\n| 上海 | 24 |\n| 深圳 | 22 |\n| 杭州 | 14 |\n| 北京 | 10 |\n\n- 员工人数最多的城市是**上海**（24人），最少的城市是**北京**（10人），两者相差14人。\n- 各城市按员工人数从高到低的排序为：**上海 > 深圳 > 杭州 > 北京**。\n\n## 补充说明\n\n- 柱状图已生成，保存为HTML文件（`chart_05d5a051716f4a77933c5268c871c171.html`）。\n- 本统计结果仅针对当前数据中包含的4个城市，未涉及其他城市。",
+        "error_message": null
+      }
+    },
+    {
+      "case_id": "orders_001",
+      "dataset_file": "orders.csv",
+      "category": "distribution",
+      "passed": true,
+      "execution_success": true,
+      "result_correct": true,
+      "columns_correct": true,
+      "order_correct": true,
+      "chart_correct": true,
+      "repair_count": 0,
+      "error_message": null,
+      "question": "统计不同订单状态的订单数量，按照数量从高到低排序，并生成柱状图。结果包含order_status和order_count两列。",
+      "duration_seconds": 13.479,
+      "agent_response": {
+        "task_id": "task-65165ee987de4ad2af43d4a9e4b65f61",
+        "dataset_id": "dataset-orders",
+        "question": "统计不同订单状态的订单数量，按照数量从高到低排序，并生成柱状图。结果包含order_status和order_count两列。",
+        "status": "completed",
+        "plan": {
+          "objective": "统计不同订单状态的订单数量，按数量从高到低排序，并用柱状图展示结果，结果包含order_status和order_count两列。",
+          "required_columns": [
+            "order_status"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "检查订单状态字段",
+              "description": "查看order_status字段的取值分布，确认包含哪些订单状态，并无缺失或异常值。",
+              "operation": "inspect",
+              "required_columns": [
+                "order_status"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "按订单状态分组统计订单数量",
+              "description": "以order_status为分组字段，统计每个状态对应的订单数量，生成新的输出字段order_count，并按照order_count从高到低排序。",
+              "operation": "aggregate",
+              "required_columns": [
+                "order_status"
+              ]
+            },
+            {
+              "step_id": 3,
+              "title": "生成订单状态数量柱状图",
+              "description": "基于order_status和order_count绘制柱状图，横轴为order_status，纵轴为order_count，直观展示不同订单状态的数量差异。",
+              "operation": "visualize",
+              "required_columns": [
+                "order_status"
+              ]
+            }
+          ],
+          "expected_outputs": [
+            "包含order_status和order_count两列的汇总结果，按order_count从高到低排序",
+            "展示不同订单状态订单数量的柱状图"
+          ],
+          "needs_visualization": true,
+          "chart_type": "bar"
+        },
+        "generated_code": "result = df.groupby('order_status').size().reset_index(name='order_count').sort_values('order_count', ascending=False).reset_index(drop=True)\n\nfig = px.bar(result, x='order_status', y='order_count', title='不同订单状态的订单数量', labels={'order_status': '订单状态', 'order_count': '订单数量'})",
+        "code_explanation": "代码按order_status分组统计订单数量，生成包含order_status和order_count两列的结果，并按订单数量从高到低排序，最后使用Plotly绘制柱状图。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "order_status": "已完成",
+              "order_count": 148
+            },
+            {
+              "order_status": "已取消",
+              "order_count": 20
+            },
+            {
+              "order_status": "已退款",
+              "order_count": 12
+            }
+          ],
+          "generated_files": [
+            "/root/autodl-tmp/DataPilot/data/outputs/chart_81c9be2547b34b159519120337de143a.html"
+          ],
+          "execution_time_seconds": 0.120413
+        },
+        "repair_count": 0,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：180行，12列",
+          "数据画像生成完成",
+          "分析计划生成完成，共3个步骤",
+          "Python分析代码生成完成",
+          "Python代码执行成功，耗时0.120413秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n已按订单状态完成订单数量统计，并按数量从高到低排序。结果显示，**已完成**订单数量最多，**已退款**订单数量最少。\n\n## 关键数据\n\n| order_status | order_count |\n|---|---|\n| 已完成 | 148 |\n| 已取消 | 20 |\n| 已退款 | 12 |\n\n- 订单状态共有 3 种：已完成、已取消、已退款。\n- **已完成**订单数量最高（148 单），占总统计数量的 82.2%。\n- **已退款**订单数量最低（12 单）。\n- 已取消订单数量略多于已退款订单，但两者与已完成订单差距显著。\n\n## 补充说明\n\n- 柱状图已生成，可直观展示不同订单状态的数量差异。\n- 执行结果仅包含上述 3 种订单状态，未出现缺失值或异常值。",
+        "error_message": null
+      }
+    },
+    {
+      "case_id": "orders_002",
+      "dataset_file": "orders.csv",
+      "category": "filter_aggregation",
+      "passed": true,
+      "execution_success": true,
+      "result_correct": true,
+      "columns_correct": true,
+      "order_correct": true,
+      "chart_correct": true,
+      "repair_count": 0,
+      "error_message": null,
+      "question": "仅分析已完成订单，统计各产品类别的订单总金额，按照总金额从高到低排序。结果包含category和total_revenue两列。",
+      "duration_seconds": 26.973,
+      "agent_response": {
+        "task_id": "task-e30e9d04a7ae412f88baee9b894929bd",
+        "dataset_id": "dataset-orders",
+        "question": "仅分析已完成订单，统计各产品类别的订单总金额，按照总金额从高到低排序。结果包含category和total_revenue两列。",
+        "status": "completed",
+        "plan": {
+          "objective": "仅分析已完成订单，统计各产品类别的订单总金额，并按总金额从高到低排序，输出包含category和total_revenue两列的结果。",
+          "required_columns": [
+            "order_status",
+            "category",
+            "order_amount"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "筛选已完成订单",
+              "description": "从原始数据中筛选出order_status为“已完成”的订单，保留category和order_amount字段以备后续聚合。",
+              "operation": "filter",
+              "required_columns": [
+                "order_status",
+                "category",
+                "order_amount"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "按产品类别聚合订单总金额",
+              "description": "基于筛选后的已完成订单，按category分组，对order_amount求和，生成新字段total_revenue。",
+              "operation": "aggregate",
+              "required_columns": [
+                "category",
+                "order_amount"
+              ]
+            },
+            {
+              "step_id": 3,
+              "title": "按总金额降序排序",
+              "description": "将上一步聚合结果按照total_revenue从高到低排序，确保最终输出顺序符合要求。",
+              "operation": "sort",
+              "required_columns": []
+            },
+            {
+              "step_id": 4,
+              "title": "可视化各产品类别总金额",
+              "description": "使用条形图展示各产品类别的total_revenue，以便直观比较不同类别的订单总金额。",
+              "operation": "visualize",
+              "required_columns": []
+            }
+          ],
+          "expected_outputs": [
+            "包含category和total_revenue两列的数据表，每一行对应一个产品类别，total_revenue为该类别已完成订单的订单金额总和",
+            "结果按total_revenue从高到低排序"
+          ],
+          "needs_visualization": true,
+          "chart_type": "bar"
+        },
+        "generated_code": "import pandas as pd\nimport plotly.express as px\n\n# 筛选已完成订单\nfiltered_df = df[df['order_status'] == '已完成'].copy()\n\n# 按产品类别统计订单总金额并按总金额降序排序\nresult = (\n    filtered_df.groupby('category', as_index=False)['order_amount']\n    .sum()\n    .rename(columns={'order_amount': 'total_revenue'})\n    .sort_values('total_revenue', ascending=False)\n    .reset_index(drop=True)\n)\n\n# 可视化各产品类别总金额\nfig = px.bar(result, x='category', y='total_revenue', title='各产品类别已完成订单总金额')",
+        "code_explanation": "代码先筛选订单状态为“已完成”的订单，然后按产品类别分组对订单金额求和，得到总金额，并按总金额降序排序，最终结果保存在result中，同时生成条形图fig展示各产品类别的总金额。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "category": "食品",
+              "total_revenue": 119829.64
+            },
+            {
+              "category": "服装",
+              "total_revenue": 99317.46
+            },
+            {
+              "category": "数码",
+              "total_revenue": 70884.18
+            },
+            {
+              "category": "家居",
+              "total_revenue": 66577.98
+            },
+            {
+              "category": "图书",
+              "total_revenue": 64948.98
+            }
+          ],
+          "generated_files": [
+            "/root/autodl-tmp/DataPilot/data/outputs/chart_55007b31288c4508ba004860e956494f.html"
+          ],
+          "execution_time_seconds": 0.120151
+        },
+        "repair_count": 0,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：180行，12列",
+          "数据画像生成完成",
+          "分析计划生成完成，共4个步骤",
+          "Python分析代码生成完成",
+          "Python代码执行成功，耗时0.120151秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n已完成订单中，各产品类别的订单总金额从高到低排序为：**食品 > 服装 > 数码 > 家居 > 图书**。其中**食品**类别的订单总金额最高，为 **119,829.64元**；**图书**类别最低，为 **64,948.98元**。\n\n## 关键数据\n\n| 排名 | 产品类别 | 订单总金额（元） |\n|------|----------|------------------|\n| 1 | 食品 | 119,829.64 |\n| 2 | 服装 | 99,317.46 |\n| 3 | 数码 | 70,884.18 |\n| 4 | 家居 | 66,577.98 |\n| 5 | 图书 | 64,948.98 |\n\n各品类中，食品类总金额领先服装类约 2.05 万元，为图书类金额的约 1.85 倍。\n\n## 补充说明\n\n本报告仅统计订单状态为“已完成”的订单数据，不含其他状态的订单。对应的条形图已生成，可直观查看各品类之间的金额差异。",
+        "error_message": null
+      }
+    },
+    {
+      "case_id": "orders_003",
+      "dataset_file": "orders.csv",
+      "category": "filter_average",
+      "passed": true,
+      "execution_success": true,
+      "result_correct": true,
+      "columns_correct": true,
+      "order_correct": true,
+      "chart_correct": true,
+      "repair_count": 0,
+      "error_message": null,
+      "question": "仅分析已完成订单，比较不同客户类型的平均订单金额，按照平均金额从高到低排序，并生成柱状图。结果包含customer_type和average_order_amount两列。",
+      "duration_seconds": 32.679,
+      "agent_response": {
+        "task_id": "task-a4dcfb9325af41feaeeb6bcb4b7bd7b0",
+        "dataset_id": "dataset-orders",
+        "question": "仅分析已完成订单，比较不同客户类型的平均订单金额，按照平均金额从高到低排序，并生成柱状图。结果包含customer_type和average_order_amount两列。",
+        "status": "completed",
+        "plan": {
+          "objective": "仅分析已完成订单，比较不同客户类型的平均订单金额，并按照平均金额从高到低排序，生成柱状图。",
+          "required_columns": [
+            "order_status",
+            "customer_type",
+            "order_amount"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "检查相关字段数据质量",
+              "description": "检查order_status、customer_type、order_amount字段的缺失值、类型和取值分布，确保数据可用于后续分析。",
+              "operation": "inspect",
+              "required_columns": [
+                "order_status",
+                "customer_type",
+                "order_amount"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "筛选已完成订单",
+              "description": "从原始数据中筛选出order_status为“已完成”的订单记录，作为后续分析的数据集。",
+              "operation": "filter",
+              "required_columns": [
+                "order_status"
+              ]
+            },
+            {
+              "step_id": 3,
+              "title": "按客户类型计算平均订单金额并排序",
+              "description": "对筛选后的已完成订单，按customer_type分组，计算order_amount的平均值，生成average_order_amount字段，并按照平均订单金额从高到低排序。",
+              "operation": "aggregate",
+              "required_columns": [
+                "customer_type",
+                "order_amount"
+              ]
+            },
+            {
+              "step_id": 4,
+              "title": "生成平均订单金额柱状图",
+              "description": "基于步骤3生成的聚合结果，绘制柱状图，展示不同客户类型的平均订单金额对比，横轴为customer_type，纵轴为average_order_amount。",
+              "operation": "visualize",
+              "required_columns": []
+            }
+          ],
+          "expected_outputs": [
+            "包含customer_type和average_order_amount两列的汇总结果，按平均订单金额从高到低排序",
+            "展示不同客户类型平均订单金额对比的柱状图"
+          ],
+          "needs_visualization": true,
+          "chart_type": "bar"
+        },
+        "generated_code": "import pandas as pd\nimport plotly.express as px\n\ncompleted_df = df[df['order_status'] == '已完成'].copy()\nresult = completed_df.groupby('customer_type', as_index=False)['order_amount'].mean()\nresult = result.rename(columns={'order_amount': 'average_order_amount'})\nresult = result.sort_values('average_order_amount', ascending=False).reset_index(drop=True)\n\nfig = px.bar(result, x='customer_type', y='average_order_amount', title='不同客户类型的平均订单金额（已完成订单）')",
+        "code_explanation": "筛选出已完成订单，按客户类型分组计算平均订单金额，生成包含customer_type和average_order_amount的汇总结果，按平均金额从高到低排序，并绘制柱状图。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "customer_type": "普通客户",
+              "average_order_amount": 2943.1266666667
+            },
+            {
+              "customer_type": "会员客户",
+              "average_order_amount": 2767.7730612245
+            },
+            {
+              "customer_type": "企业客户",
+              "average_order_amount": 2580.9813333333
+            }
+          ],
+          "generated_files": [
+            "/root/autodl-tmp/DataPilot/data/outputs/chart_248bcba0e1dd43e7935eb59ecdd4df38.html"
+          ],
+          "execution_time_seconds": 0.115028
+        },
+        "repair_count": 0,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：180行，12列",
+          "数据画像生成完成",
+          "分析计划生成完成，共4个步骤",
+          "Python分析代码生成完成",
+          "Python代码执行成功，耗时0.115028秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n对已完成订单按客户类型分组统计平均订单金额，结果显示：**普通客户的平均订单金额最高**，其次为会员客户，企业客户最低。\n\n## 关键数据\n\n| 客户类型 | 平均订单金额（元） |\n| :--- | :--- |\n| 普通客户 | 2943.13 |\n| 会员客户 | 2767.77 |\n| 企业客户 | 2580.98 |\n\n- **最高值**：普通客户（2943.13元）\n- **最低值**：企业客户（2580.98元）\n- 普通客户平均订单金额比企业客户高约 **14.03%**（约362.15元），差距较为明显。\n\n## 补充说明\n\n- 本次分析仅针对**订单状态为“已完成”**的订单数据。\n- 柱状图已生成，可查看对应HTML文件直观对比各客户类型的平均订单金额差异。",
+        "error_message": null
+      }
+    },
+    {
+      "case_id": "orders_004",
+      "dataset_file": "orders.csv",
+      "category": "top_n",
+      "passed": true,
+      "execution_success": true,
+      "result_correct": true,
+      "columns_correct": true,
+      "order_correct": true,
+      "chart_correct": true,
+      "repair_count": 0,
+      "error_message": null,
+      "question": "仅分析已完成订单，找出订单总金额最高的前5名客户，按照总金额从高到低排序。结果包含customer_id和total_order_amount两列。",
+      "duration_seconds": 24.728,
+      "agent_response": {
+        "task_id": "task-601ef7bd6fa94030aafb27a6dad3d58d",
+        "dataset_id": "dataset-orders",
+        "question": "仅分析已完成订单，找出订单总金额最高的前5名客户，按照总金额从高到低排序。结果包含customer_id和total_order_amount两列。",
+        "status": "completed",
+        "plan": {
+          "objective": "分析已完成订单，按客户汇总订单总金额，找出订单总金额最高的前5名客户，并按总金额从高到低排序，输出客户ID和对应总金额。",
+          "required_columns": [
+            "customer_id",
+            "order_amount",
+            "order_status"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "查看数据概况",
+              "description": "查看orders.csv数据集中的字段和数据质量，确认customer_id、order_amount、order_status等关键字段存在且无缺失值。",
+              "operation": "inspect",
+              "required_columns": [
+                "customer_id",
+                "order_amount",
+                "order_status"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "筛选已完成订单",
+              "description": "从订单数据中筛选出order_status为'已完成'的订单记录，仅保留这些订单用于后续分析。",
+              "operation": "filter",
+              "required_columns": [
+                "order_status"
+              ]
+            },
+            {
+              "step_id": 3,
+              "title": "按客户聚合订单金额",
+              "description": "按customer_id分组，对order_amount求和，生成每个客户的总订单金额，输出字段为customer_id和total_order_amount。",
+              "operation": "aggregate",
+              "required_columns": [
+                "customer_id",
+                "order_amount"
+              ]
+            },
+            {
+              "step_id": 4,
+              "title": "排序并提取前5名客户",
+              "description": "根据上一步生成的total_order_amount，按降序排列所有客户，并提取前5名，得到最终结果。",
+              "operation": "sort",
+              "required_columns": []
+            }
+          ],
+          "expected_outputs": [
+            "包含customer_id和total_order_amount两列的数据表，仅包含已完成订单",
+            "按total_order_amount从高到低排序的前5条客户记录"
+          ],
+          "needs_visualization": false,
+          "chart_type": null
+        },
+        "generated_code": "completed_df = df[df['order_status'] == '已完成'].copy()\ncustomer_totals = completed_df.groupby('customer_id', as_index=False)['order_amount'].sum()\ncustomer_totals = customer_totals.rename(columns={'order_amount': 'total_order_amount'})\nresult = customer_totals.sort_values('total_order_amount', ascending=False).head(5).reset_index(drop=True)",
+        "code_explanation": "筛选出订单状态为'已完成'的记录，按customer_id分组对order_amount求和得到每个客户的总订单金额，重命名列为total_order_amount，按总金额降序排序后取前5名，结果保存在result中。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "customer_id": "C036",
+              "total_order_amount": 43415.96
+            },
+            {
+              "customer_id": "C035",
+              "total_order_amount": 31376.06
+            },
+            {
+              "customer_id": "C045",
+              "total_order_amount": 25177.52
+            },
+            {
+              "customer_id": "C025",
+              "total_order_amount": 18416.44
+            },
+            {
+              "customer_id": "C021",
+              "total_order_amount": 18214.52
+            }
+          ],
+          "generated_files": [],
+          "execution_time_seconds": 0.012533
+        },
+        "repair_count": 0,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：180行，12列",
+          "数据画像生成完成",
+          "分析计划生成完成，共4个步骤",
+          "Python分析代码生成完成",
+          "Python代码执行成功，耗时0.012533秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n在已完成订单中，订单总金额最高的前5名客户已筛选出，并按总金额从高到低排序。**客户C036以43,415.96元的总订单金额位居第一，是唯一总金额超过40,000元的客户。**\n\n## 关键数据\n\n| 排名 | customer_id | total_order_amount |\n|------|-------------|-------------------|\n| 1 | C036 | 43,415.96 |\n| 2 | C035 | 31,376.06 |\n| 3 | C045 | 25,177.52 |\n| 4 | C025 | 18,416.44 |\n| 5 | C021 | 18,214.52 |\n\n## 补充说明\n\n- 本结果仅针对`order_status`为\"已完成\"的订单进行统计。\n- 第一名（C036）与第二名（C035）的总金额差距约12,039.90元，差距较为明显；第四名（C025）与第五名（C021）之间仅相差201.92元，非常接近。",
+        "error_message": null
+      }
+    },
+    {
+      "case_id": "orders_005",
+      "dataset_file": "orders.csv",
+      "category": "time_series",
+      "passed": true,
+      "execution_success": true,
+      "result_correct": true,
+      "columns_correct": true,
+      "order_correct": true,
+      "chart_correct": true,
+      "repair_count": 0,
+      "error_message": null,
+      "question": "仅分析已完成订单，统计每个月的订单数量，按照月份升序排列，并生成折线图。结果包含month和order_count两列，month格式为YYYY-MM。",
+      "duration_seconds": 30.796,
+      "agent_response": {
+        "task_id": "task-f16bbfa8897b43baaa02ca91bb2848a3",
+        "dataset_id": "dataset-orders",
+        "question": "仅分析已完成订单，统计每个月的订单数量，按照月份升序排列，并生成折线图。结果包含month和order_count两列，month格式为YYYY-MM。",
+        "status": "completed",
+        "plan": {
+          "objective": "分析已完成订单的月度数量趋势，按月统计订单数并升序排列，同时生成折线图。",
+          "required_columns": [
+            "order_date",
+            "order_status"
+          ],
+          "steps": [
+            {
+              "step_id": 1,
+              "title": "检查原始数据",
+              "description": "检查order_date和order_status字段的格式、取值分布及缺失情况，确认数据可用于后续分析。",
+              "operation": "inspect",
+              "required_columns": [
+                "order_date",
+                "order_status"
+              ]
+            },
+            {
+              "step_id": 2,
+              "title": "筛选已完成订单",
+              "description": "过滤order_status为“已完成”的订单记录，仅保留这些订单用于后续统计。",
+              "operation": "filter",
+              "required_columns": [
+                "order_status"
+              ]
+            },
+            {
+              "step_id": 3,
+              "title": "提取订单月份",
+              "description": "从order_date中提取年份和月份，生成新字段month，格式为YYYY-MM。",
+              "operation": "calculate",
+              "required_columns": [
+                "order_date"
+              ]
+            },
+            {
+              "step_id": 4,
+              "title": "按月统计订单数量",
+              "description": "按month分组，统计每个月的订单数量，生成order_count字段。",
+              "operation": "aggregate",
+              "required_columns": []
+            },
+            {
+              "step_id": 5,
+              "title": "按月份升序排序",
+              "description": "对统计结果按month升序排列，确保月度顺序正确。",
+              "operation": "sort",
+              "required_columns": []
+            },
+            {
+              "step_id": 6,
+              "title": "绘制折线图",
+              "description": "使用month作为x轴、order_count作为y轴绘制折线图，展示月度订单数量变化趋势。",
+              "operation": "visualize",
+              "required_columns": []
+            }
+          ],
+          "expected_outputs": [
+            "包含month和order_count两列的统计表，按月份升序排列",
+            "展示月度订单数量趋势的折线图"
+          ],
+          "needs_visualization": true,
+          "chart_type": "line"
+        },
+        "generated_code": "import pandas as pd\nimport plotly.express as px\n\n# 筛选已完成订单\ncompleted_orders = df[df['order_status'] == '已完成'].copy()\n\n# 提取订单月份（YYYY-MM格式）\ncompleted_orders['month'] = pd.to_datetime(completed_orders['order_date']).dt.strftime('%Y-%m')\n\n# 按月统计订单数量\nresult = completed_orders.groupby('month', as_index=False).agg(order_count=('order_id', 'count'))\n\n# 按月份升序排序\nresult = result.sort_values('month').reset_index(drop=True)\n\n# 绘制折线图\nfig = px.line(result, x='month', y='order_count', title='每月已完成订单数量趋势', markers=True)\n\n# 最终结果result保存了month和order_count两列",
+        "code_explanation": "代码首先筛选出order_status为“已完成”的订单，然后从order_date中提取YYYY-MM格式的月份，按月份分组统计订单数量，并按月份升序排列。最后使用Plotly绘制月度订单数量折线图，结果保存在result中。",
+        "execution": {
+          "success": true,
+          "stdout": "",
+          "error_type": null,
+          "error_message": null,
+          "result_preview": [
+            {
+              "month": "2025-01",
+              "order_count": 18
+            },
+            {
+              "month": "2025-02",
+              "order_count": 10
+            },
+            {
+              "month": "2025-03",
+              "order_count": 12
+            },
+            {
+              "month": "2025-04",
+              "order_count": 17
+            },
+            {
+              "month": "2025-05",
+              "order_count": 14
+            },
+            {
+              "month": "2025-06",
+              "order_count": 16
+            },
+            {
+              "month": "2025-07",
+              "order_count": 11
+            },
+            {
+              "month": "2025-08",
+              "order_count": 10
+            },
+            {
+              "month": "2025-09",
+              "order_count": 11
+            },
+            {
+              "month": "2025-10",
+              "order_count": 12
+            },
+            {
+              "month": "2025-11",
+              "order_count": 9
+            },
+            {
+              "month": "2025-12",
+              "order_count": 8
+            }
+          ],
+          "generated_files": [
+            "/root/autodl-tmp/DataPilot/data/outputs/chart_d1bd4c7ecbe245e2afdaa8bebad6ba53.html"
+          ],
+          "execution_time_seconds": 0.093206
+        },
+        "repair_count": 0,
+        "execution_trace": [
+          "LangGraph分析任务已创建",
+          "数据集加载完成：180行，12列",
+          "数据画像生成完成",
+          "分析计划生成完成，共6个步骤",
+          "Python分析代码生成完成",
+          "Python代码执行成功，耗时0.093206秒",
+          "数据分析报告生成完成"
+        ],
+        "answer": "## 分析结论\n\n已完成订单的月度统计结果显示，2025年1月至12月期间均有订单记录，整体订单量呈现波动下降趋势。1月订单数量最多（18单），随后在2月明显下降，之后在3月至6月间有所回升，但下半年整体低于上半年，12月订单数量最少（8单）。\n\n## 关键数据\n\n| 月份 | 订单数量 |\n|------|----------|\n| 2025-01 | 18 |\n| 2025-02 | 10 |\n| 2025-03 | 12 |\n| 2025-04 | 17 |\n| 2025-05 | 14 |\n| 2025-06 | 16 |\n| 2025-07 | 11 |\n| 2025-08 | 10 |\n| 2025-09 | 11 |\n| 2025-10 | 12 |\n| 2025-11 | 9 |\n| 2025-12 | 8 |\n\n- 最大月度订单量：**2025-01，18单**\n- 最小月度订单量：**2025-12，8单**\n- 全年总订单量：**148单**\n\n## 补充说明\n\n- 统计口径为`order_status`为“已完成”的订单。\n- 折线图已生成，可直观展示月度订单数量的变化趋势。",
+        "error_message": null
+      }
+    }
+  ]
+}
